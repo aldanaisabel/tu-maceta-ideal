@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Maceta Ideal - <div check=""></div></title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <i class="fas fa-bars hamburger-menu" id="hamburger-menu"></i>
+        <h1>TU MACETA IDEAL</h1>
+        <div class="header-icons">
+            <i class="fas fa-user header-icon"></i>
+            <i class="fas fa-shopping-cart header-icon"></i>
+        </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="personalizar.html">Personaliza tu Maceta</a></li>
+            <li><a href="mis-pedidos.html">Mis Pedidos</a></li>
+            <li><a href="admin-panel.html">Admin Panel</a></li>
+            <li><a href="login-registro.html">Iniciar Sesión / Registrarse</a></li>
+        </ul>
+        <div class="sidebar-bottom">
+            <div class="sidebar-contact-info">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Ubicación</span>
+            </div>
+            <div class="sidebar-contact-info">
+                <i class="fas fa-phone"></i>
+                <span>Contáctanos</span>
+            </div>
+        </div>
+    </aside>
+
+    <main>
+        ```
+
+    <main>
+        <section id="checkout-section">
+            <h2>Finalizar Compra</h2>
+
+            <div class="resumen-compra">
+                <h3>Resumen de tu Pedido</h3>
+                <p>Maceta Mediana, Terracota, x1</p>
+                <p>Total a pagar: <span id="checkout-total">$XX.XX</span></p>
+            </div>
+
+            <div class="datos-envio">
+                <h3>Datos de Envío</h3>
+                <form id="envio-form">
+                    <div class="form-grupo">
+                        <label for="nombre-envio">Nombre Completo:</label>
+                        <input type="text" id="nombre-envio" name="nombre_envio" required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="direccion-envio">Dirección:</label>
+                        <input type="text" id="direccion-envio" name="direccion_envio" placeholder="Calle, Número, Depto." required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="ciudad-envio">Ciudad:</label>
+                        <input type="text" id="ciudad-envio" name="ciudad_envio" required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="provincia-envio">Provincia:</label>
+                        <input type="text" id="provincia-envio" name="provincia_envio" required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="codigo-postal-envio">Código Postal:</label>
+                        <input type="text" id="codigo-postal-envio" name="codigo_postal_envio" required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="telefono-envio">Teléfono de Contacto:</label>
+                        <input type="tel" id="telefono-envio" name="telefono_envio" required>
+                    </div>
+                </form>
+            </div>
+
+            <div class="metodo-pago">
+                <h3>Método de Pago</h3>
+                <div class="opcion-pago">
+                    <input type="radio" id="pago-transferencia" name="metodo_pago" value="transferencia" checked>
+                    <label for="pago-transferencia">Transferencia Bancaria</label>
+                    <div id="info-transferencia" class="detalle-pago">
+                        <p>Realiza tu transferencia a la siguiente cuenta:</p>
+                        <p>Banco: [Nombre del Banco]</p>
+                        <p>Número de Cuenta: [XXXX-XXXX-XXXX-XXXX]</p>
+                        <p>Alias CBU: [ALIAS.CBU.EJEMPLO]</p>
+                        <p>Por favor, envía el comprobante a nuestro email: contacto@tumatetaideal.com</p>
+                    </div>
+                </div>
+
+                <div class="opcion-pago">
+                    <input type="radio" id="pago-tarjeta" name="metodo_pago" value="tarjeta">
+                    <label for="pago-tarjeta">Tarjeta de Crédito / Débito</label>
+                    <div id="info-tarjeta" class="detalle-pago" style="display: none;">
+                        <form id="tarjeta-form">
+                            <div class="form-grupo">
+                                <label for="numero-tarjeta">Número de Tarjeta:</label>
+                                <input type="text" id="numero-tarjeta" name="numero_tarjeta" placeholder="XXXX XXXX XXXX XXXX" required>
+                            </div>
+                            <div class="form-grupo">
+                                <label for="nombre-tarjeta">Nombre en la Tarjeta:</label>
+                                <input type="text" id="nombre-tarjeta" name="nombre_tarjeta" required>
+                            </div>
+                            <div class="form-grupo small-inputs">
+                                <div class="form-grupo">
+                                    <label for="fecha-vencimiento">Fecha de Vencimiento:</label>
+                                    <input type="text" id="fecha-vencimiento" name="fecha_vencimiento" placeholder="MM/AA" required>
+                                </div>
+                                <div class="form-grupo">
+                                    <label for="cvv">CVV:</label>
+                                    <input type="text" id="cvv" name="cvv" placeholder="XXX" required>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="boton-primario">Confirmar Compra</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Tu Maceta Ideal. Todos los derechos reservados.</p>
+    </footer>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
