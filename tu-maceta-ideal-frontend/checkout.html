@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Maceta Ideal - Finalizar Compra</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos inline para checkout */
+        #checkout-section {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(74,124,89,0.15);
+        }
+        .resumen-compra {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+        .form-grupo {
+            margin-bottom: 1rem;
+        }
+        .opcion-pago {
+            flex: 1;
+            min-width: 120px;
+            padding: 1rem;
+            border: 2px solid #e8f0e4;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        .opcion-pago:hover {
+            transform: translateY(-2px);
+        }
+        .opcion-pago.active {
+            border-color: #4a7c59;
+            background: #4a7c59;
+            color: white;
+        }
+        .boton-primario {
+            width: 100%;
+            background: linear-gradient(135deg, #4a7c59 0%, #2d5016 100%);
+            color: white;
+            border: none;
+            padding: 1.5rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 2rem;
+            box-shadow: 0 15px 40px rgba(74,124,89,0.3);
+            transition: all 0.3s ease;
+        }
+        .boton-primario:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(74,124,89,0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER Y SIDEBAR IGUALES -->
+    <header>
+        <i class="fas fa-bars hamburger-menu" id="hamburger-menu"></i>
+        <h1>TU MACETA IDEAL</h1>
+        <div class="header-icons">
+            <i class="fas fa-user header-icon"></i>
+            <i class="fas fa-shopping-cart header-icon"></i>
+        </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="personalizar.html">Personaliza tu Maceta</a></li>
+            <li><a href="mis-pedidos.html">Mis Pedidos</a></li>
+            <li><a href="admin-panel.html">Admin Panel</a></li>
+            <li><a href="login-registro.html">Iniciar Sesión / Registrarse</a></li>
+        </ul>
+        <div class="sidebar-bottom">
+            <div class="sidebar-contact-info">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Ubicación</span>
+            </div>
+            <div class="sidebar-contact-info">
+                <i class="fas fa-phone"></i>
+                <span>Contáctanos</span>
+            </div>
+        </div>
+    </aside>
+
+    <main>
+        <section id="checkout-section">
+            <h2 style="text-align: center; font-size: 2.8rem; font-weight: 800; background: linear-gradient(135deg, #4a7c59 0%, #2d5016 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">
+                <i class="fas fa-credit-card"></i> Finalizar Compra
+            </h2>
+
+            <!-- RESUMEN DINÁMICO DEL CARRITO -->
+            <div class="resumen-compra">
+                <h3 style="margin-bottom: 1rem; color: #2d5016;"><i class="fas fa-receipt"></i> Resumen de tu Pedido</h3>
+                <div id="checkout-items"></div>
+                <div style="display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: 700; color: #4a7c59; padding-top: 1rem; border-top: 2px solid #e8f0e4;">
+                    <span>Total:</span>
+                    <span id="checkout-total">$0</span>
+                </div>
+            </div>
+
+            <!-- FORMULARIO (IGUAL) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <!-- DATOS PERSONALES + ENVÍO (mismo código) -->
+                <div style="background: #f8f9fa; padding: 2rem; border-radius: 20px;">
+                    <h3 style="margin-bottom: 1.5rem; color: #2d5016;"><i class="fas fa-user"></i> Datos Personales y Envío</h3>
+                    <form id="envio-form">
+                        <div class="form-grupo">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Nombre Completo *</label>
+                            <input type="text" id="nombre-envio" required style="width: 100%; padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                        </div>
+                        <div class="form-grupo">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">DNI *</label>
+                            <input type="text" id="dni" required style="width: 100%; padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                        </div>
+                        <div class="form-grupo">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">📧 Email * (para recibir ticket)</label>
+                         <input type="email" id="cliente-email" required 
+                           placeholder="tucorreo@gmail.com" 
+                         style="width: 100%; padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                        </div>
+                        <div class="form-grupo">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Teléfono *</label>
+                            <input type="tel" id="telefono-envio" required style="width: 100%; padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                        </div>
+                        <div class="form-grupo">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Dirección Completa *</label>
+                            <input type="text" id="direccion-envio" placeholder="Calle, Número, Piso, Dpto" required style="width: 100%; padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Provincia *</label>
+                                <input type="text" id="provincia-envio" required style="width: 100%; padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Código Postal *</label>
+                                <input type="text" id="codigo-postal-envio" required style="width: 100%; padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- MÉTODOS DE PAGO (mismo código) -->
+                <div style="background: #f8f9fa; padding: 2rem; border-radius: 20px;">
+                    <h3 style="margin-bottom: 1.5rem; color: #2d5016;"><i class="fas fa-credit-card"></i> Método de Pago</h3>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <div class="opcion-pago" data-method="transferencia">
+                            <i class="fas fa-university" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i>
+                            <div>Transferencia</div>
+                        </div>
+                        <div class="opcion-pago" data-method="tarjeta">
+                            <i class="fas fa-credit-card" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i>
+                            <div>Tarjeta</div>
+                        </div>
+                        <div class="opcion-pago" data-method="efectivo">
+                            <i class="fas fa-money-bill-wave" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i>
+                            <div>Efectivo</div>
+                        </div>
+                    </div>
+                    <div id="transferencia-details" style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #4a7c59; display: block;">
+                        <p><strong>ALIAS:</strong> TU.MACETA.IDEAL.MP</p>
+                        <p><strong>CBU:</strong> 00000000123456789</p>
+                        <p>Envía comprobante a: macetasideal@gmail.com
+                    </div>
+                    <div id="tarjeta-details" style="display: none; background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ff6b35;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem;">
+                            <input type="text" id="numero-tarjeta" placeholder="1234 5678 9012 3456" style="padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                            <input type="text" id="vencimiento" placeholder="MM/AA" style="padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                            <input type="text" id="cvv" placeholder="CVV" style="padding: 1rem; border: 2px solid #e8f0e4; border-radius: 12px;">
+                        </div>
+                    </div>
+                    <div id="efectivo-details" style="display: none; background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #28a745;">
+                        <p><strong>Retiro en:</strong> BUENOS AIRES ARGENTINA.
+                        <p>SOBERANIA NACIONA 6000-GONZALEZ CATAN.
+                        <p>Preparado en 48hs</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTÓN PRINCIPAL -->
+            <button class="boton-primario" onclick="confirmarCompra()">
+                <i class="fas fa-check"></i> Confirmar Compra Segura
+            </button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Tu Maceta Ideal. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Render resumen carrito
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const total = cart.reduce((sum, item) => sum + (item.basePrice * item.quantity || 0), 0);
+            
+            const checkoutItems = document.getElementById('checkout-items');
+            if (checkoutItems) {
+                checkoutItems.innerHTML = cart.length > 0 
+                    ? cart.map(item => `
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                            <span>${item.name} (x${item.quantity})</span>
+                            <span>$${ (item.basePrice * item.quantity).toLocaleString() }</span>
+                        </div>
+                    `).join('')
+                    : '<p style="color: #718096;">Carrito vacío</p>';
+            }
+            
+            const checkoutTotal = document.getElementById('checkout-total');
+            if (checkoutTotal) {
+                checkoutTotal.textContent = `$${total.toLocaleString()}`;
+            }
+
+            // 2. Métodos de pago
+            document.querySelectorAll('.opcion-pago').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.opcion-pago').forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    document.querySelectorAll('[id$="-details"]').forEach(detail => detail.style.display = 'none');
+                    const detailId = this.dataset.method + '-details';
+                    const detailEl = document.getElementById(detailId);
+                    if (detailEl) detailEl.style.display = 'block';
+                });
+            });
+        });
+
+        // ✅ FUNCIÓN PRINCIPAL CORREGIDA - GUARDA EN MONGODB
+        function confirmarCompra() {
+            // Obtener datos del formulario
+            const nombre = document.getElementById('nombre-envio')?.value?.trim() || '';
+            const dni = document.getElementById('dni')?.value?.trim() || '';
+            const telefono = document.getElementById('telefono-envio')?.value?.trim() || '';
+            const direccion = document.getElementById('direccion-envio')?.value?.trim() || '';
+            const provincia = document.getElementById('provincia-envio')?.value?.trim() || '';
+            const cp = document.getElementById('codigo-postal-envio')?.value?.trim() || '';
+            const email = document.getElementById('cliente-email')?.value?.trim();
+            if (!email || !email.includes('@')) {
+                alert('❌ Ingresa un email válido para recibir tu ticket');
+                return;
+            }
+            
+            // Detectar método de pago
+            const opcionActiva = document.querySelector('.opcion-pago.active');
+            const metodo = opcionActiva ? opcionActiva.dataset.method : 'transferencia';
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const total = cart.reduce((sum, item) => sum + (item.basePrice * item.quantity || 0), 0);
+            
+            let detallesPago = '';
+            
+            // Validar detalles por método
+            if (metodo === 'transferencia') {
+                const cbuInput = prompt('🔗 TRANSFERENCIA BANCARIA\n\nIngresa tu CBU o ALIAS:\n(Ej: 00000000123456789 o tu.maceta.ideal.mp)\n\nCBU/ALIAS:');
+                if (!cbuInput || cbuInput.trim() === '') {
+                    alert('❌ Debes indicar CBU o ALIAS para Transferencia');
+                    return;
+                }
+                detallesPago = cbuInput.trim();
+            }
+            
+            if (metodo === 'tarjeta') {
+                const numeroTarjeta = document.getElementById('numero-tarjeta')?.value || '';
+                const cvv = document.getElementById('cvv')?.value || '';
+                if (!numeroTarjeta || numeroTarjeta.length < 13) {
+                    alert('❌ Ingresa un número de tarjeta válido (mínimo 13 dígitos)');
+                    return;
+                }
+                if (!cvv || cvv.length < 3) {
+                    alert('❌ Ingresa CVV válido (3-4 dígitos)');
+                    return;
+                }
+                detallesPago = `${numeroTarjeta.slice(-4)}**** (${cvv.slice(-1)}*)`;
+            }
+            
+            if (metodo === 'efectivo') {
+                if (!confirm('💰 ¿Confirmas pago en EFECTIVO?\nRetiro en Tienda Tierra del Fuego')) {
+                    return;
+                }
+                detallesPago = 'Pago en efectivo - Retiro en tienda';
+            }
+            // DESPUÉS de confirmarCompra()
+            localStorage.setItem('clienteData', JSON.stringify({ 
+                email: email, 
+                dni: dni 
+            }));
+            
+            // ✅ FORM DATA FINAL (CORREGIDO)
+            const formData = {
+                cliente: {
+                    name: nombre,
+                    email: email,
+                    dni: dni
+                },
+                items: cart.map(item => ({
+                    productoId: item._id || item.id,
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.basePrice,
+                    detalle: `
+                    Color: ${item.color || 'No especificado'}
+                    Tamaño: ${item.size || 'No especificado'}
+                    Extras: ${item.extras?.join(', ') || 'Ninguno'}
+                    `.trim()
+                }))
+            };
+
+            console.log('FORM DATA ENVIADO:', formData);
+            
+            // ✅ GUARDAR EN MONGODB
+            fetch('/api/pedidos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.pedido) {
+                    localStorage.setItem('cart', '[]');
+                    alert(`✅ ¡PEDIDO CONFIRMADO!\n\n📋 ID: ${data.id}\n💰 Total: $${total.toLocaleString()}\n💳 Método: ${metodo.toUpperCase()}\n📧 Ticket enviado a ${email}\n\n🌿 ¡Guardado en base de datos!`);
+                    window.location.href = 'index.html';
+                } else {
+                    alert('❌ Error al crear pedido, inténtalo de nuevamente');
+                }
+            })
+        }
+    </script>
+</body>
+</html>

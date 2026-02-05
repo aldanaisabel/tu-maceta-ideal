@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personalizar Maceta - Tu Maceta Ideal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    :root {
+      --verde-oscuro: #2d5016;
+      --verde-principal: #4a7c59;
+      --naranja: #ff6b35;
+      --sombra: 0 20px 60px rgba(74, 124, 89, 0.15);
+      --blanco: #ffffff;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Inter", -apple-system, sans-serif;
+      background: linear-gradient(135deg, #f5f7f2 0%, #e8f0e4 100%);
+      color: var(--verde-oscuro);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    header {
+      background: linear-gradient(
+        135deg,
+        var(--verde-principal) 0%,
+        var(--verde-oscuro) 100%
+      );
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-radius: 12px;
+      box-shadow: var(--sombra);
+      max-width: 1200px;
+      margin: 0 auto 2rem;
+      width: 100%;
+    }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      flex: 1;
+    }
+    .cart-icon {
+      position: relative;
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    .cart-icon:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--naranja);
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      color: var(--verde-oscuro);
+    }
+
+    .personalizacion-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    /* VISUALIZADOR */
+    .visualizador {
+      background: var(--blanco);
+      padding: 2.5rem;
+      border-radius: 24px;
+      box-shadow: var(--sombra);
+      text-align: center;
+    }
+    #maceta-preview {
+      width: 100%;
+      max-width: 320px;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 4px solid #f0f7f4;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+    .preview-info {
+      background: linear-gradient(135deg, #f8f9fa 0%, #f0f7f4 100%);
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+    .preview-info p {
+      margin: 0.75rem 0;
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* OPCIONES */
+    .opciones {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .opcion-grupo {
+      background: var(--blanco);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: var(--sombra);
+    }
+    .opcion-grupo h3 {
+      color: var(--verde-oscuro);
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* COLORES */
+    .selector-color {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .color-opcion {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 4px solid transparent;
+      cursor: pointer;
+      transition: all 0.4s;
+      position: relative;
+    }
+    .color-opcion:hover {
+      transform: scale(1.1);
+    }
+    .color-opcion.selected {
+      border-color: var(--verde-principal);
+      box-shadow: 0 0 25px rgba(74, 124, 89, 0.6);
+      transform: scale(1.15);
+    }
+    .color-label {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: var(--blanco);
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* CANTIDAD */
+    .cantidad-input {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 800;
+      width: 100px;
+      padding: 1rem;
+      border: 3px solid var(--verde-principal);
+      border-radius: 16px;
+      background: #f8f9fa;
+    }
+
+    /*TAMAÑO*/
+    /* Select tamaño estilo cantidad */
+    #size-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      
+      width: 230px;
+      padding: 11px 15px;
+      font-size: 2rem;
+      font-weight: 800;
+      border-radius: 14px;
+      border: 3px solid var(--verde-principal);
+      background: #f8f9fa;
+      color: #2f4f2f;
+      cursor: pointer;
+      
+      /* flechita custom */
+      background-image: url("data:image/svg+xml;utf8,<svg fill='%234a7c59' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5.5 7l4.5 5 4.5-5z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 18px;
+      transition: all 0.2s ease;
+    }
+    
+    #size-select:hover {
+      border-color: #2f5d3a;
+      box-shadow: 0 0 0 3px rgba(74,124,89,0.15);
+    }
+    
+    #size-select:focus {
+      outline: none;
+      border-color: #2f5d3a;
+      box-shadow: 0 0 0 4px rgba(74,124,89,0.2);
+    }
+
+    .opcion-grupo-inline {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    /* EXTRAS */
+    .extras-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .extra-option {
+      border: 2px solid #e8f0e4;
+      padding: 1.2rem;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+    }
+    .extra-option:hover {
+      transform: translateY(-5px);
+    }
+    .extra-option.selected {
+      border-color: var(--verde-principal);
+      background: #f0f7f4;
+      box-shadow: 0 15px 30px rgba(74, 124, 89, 0.2);
+    }
+    .extra-option i {
+      font-size: 2.5rem;
+      color: var(--verde-principal);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .extra-option h4 {
+      margin-bottom: 0.5rem;
+      color: var(--verde-oscuro);
+    }
+    .extra-option p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* TARJETA REGALO */
+    .tarjeta-input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e8f0e4;
+      border-radius: 12px;
+      font-size: 1rem;
+      margin-top: 0.75rem;
+      display: none;
+      resize: vertical;
+    }
+    .tarjeta-input.active {
+      display: block;
+      border-color: var(--naranja);
+    }
+
+    /* TIERRA */
+    .tierra-opciones {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .tierra-btn {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid #e8f0e4;
+      background: white;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+    .tierra-btn.active {
+      border-color: var(--verde-principal);
+      background: var(--verde-principal);
+      color: white;
+    }
+
+    /* PLANTAS */
+    .plantas-opciones {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .planta-btn {
+      padding: 1rem 1.5rem;
+      border: 2px solid #e8f0e4;
+      background: white;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      min-width: 120px;
+    }
+    .planta-btn.active {
+      border-color: var(--verde-principal);
+      background: var(--verde-principal);
+      color: white;
+    }
+
+    /* RESUMEN */
+    .resumen {
+      background: linear-gradient(135deg, var(--blanco) 0%, #f8f9fa 100%);
+      padding: 2.5rem;
+      border-radius: 24px;
+      box-shadow: var(--sombra);
+      position: sticky;
+      top: 2rem;
+    }
+    .resumen-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid #e8f0e4;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .resumen-total {
+      font-size: 1.6rem;
+      color: var(--verde-principal);
+      font-weight: 800;
+      border-top: 3px solid var(--verde-principal);
+      padding-top: 1rem !important;
+    }
+    .btn-agregar {
+      background: linear-gradient(
+        135deg,
+        var(--verde-principal) 0%,
+        var(--verde-oscuro) 100%
+      );
+      color: white;
+      border: none;
+      padding: 1.5rem;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.4s;
+    }
+    .btn-agregar:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 25px 50px rgba(74, 124, 89, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .personalizacion-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      body {
+        padding: 0.5rem;
+      }
+    }
+
+    .extras-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 768px) { .extras-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <i class="fas fa-seedling"></i> Tu Maceta Ideal
+    </div>
+    <div
+      class="cart-icon"
+      onclick="window.location.href='carrito.html'"
+      title="Ver carrito"
+    >
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+  </header>
+
+  <main>
+    <h1><i class="fas fa-palette"></i> PERSONALIZAR MACETA</h1>
+
+    <div class="personalizacion-container">
+      <!-- VISUALIZADOR -->
+      <div class="visualizador">
+        <h2>Vista previa</h2>
+        <img
+          id="maceta-preview"
+          src="https://picsum.photos/320/320?random=1"
+          alt="Tu maceta personalizada"
+        />
+        <div class="preview-info">
+  <p><strong>Nombre:</strong> <span id="preview-nombre">–</span></p>
+  <p><strong>Tamaño:</strong> <span id="preview-tamaño">A elección</span></p>
+  <p><strong>Color:</strong> <span id="preview-color">Terracota</span></p>
+  <p><strong>Extras:</strong> <span id="preview-extras">Ninguno</span></p>
+<!-- RESUMEN -->
+ <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e8f0e4;">
+            <h4 style="margin-bottom: 1rem; color: var(--verde-principal);">🧾 Resumen Pedido</h4>
+            <p><strong>Cantidad:</strong> <span id="preview-cantidad">1</span></p>
+            <p style="font-size: 1.5rem; font-weight: 800; color: var(--verde-principal); margin-top: 0.5rem;">
+              <strong>Total:</strong> $<span id="preview-total">0</span>
+            </p>
+            <button class="btn-agregar" onclick="agregarAlCarrito(event)" style="margin-top: 1rem;">
+              <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ DERECHA: EXACTAMENTE COMO PEDISTE -->
+      <div class="opciones">
+        <!-- 🎨 Elige Color -->
+        <div class="opcion-grupo">
+          <h3>🎨 Elige Color</h3>
+          <div class="selector-color">
+            
+          </div>
+        </div>
+
+  <!-- Cantidad y Tamaño -->
+  <div class="opcion-grupo-inline">
+    <div>
+      <h3>Cantidad</h3>
+      <input type="number" id="cantidad-input" class="cantidad-input" min="1" max="100" value="1">
+    </div>
+    
+    <div>
+      <h3>Tamaño</h3>
+      <select id="size-select" class="cantidad-input">
+        <option value="Chico">Chico</option>
+        <option value="Mediano" selected>Mediano</option>
+        <option value="Grande">Grande</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- EXTRAS -->
+  <div class="opcion-grupo">
+    <h3>🎁 Extras (Opcional)</h3>
+    <div class="extras-grid">
+      <!-- Regalo + Tarjeta -->
+      <div class="extra-option" data-extra="regalo" data-price="5000">
+        <i class="fas fa-gift"></i>
+        <h4>Regalo + Tarjeta</h4>
+        <p>Incluye tarjeta personalizada</p>
+        <textarea
+          class="tarjeta-input"
+          id="tarjeta-mensaje"
+          placeholder="Mensaje para la tarjeta (máx 100 caracteres)...">
+        </textarea>
+      </div>
+
+      <!-- Tierra Premium -->
+      <div class="extra-option" data-extra="tierra" data-price="3000">
+        <i class="fas fa-seedling"></i>
+        <h4>Tierra Premium</h4>
+        <p>Tierra orgánica lista</p>
+        <div class="tierra-opciones">
+          <button class="tierra-btn" data-kilos="5">5kg</button>
+          <button class="tierra-btn" data-kilos="10">10kg</button>
+          <button class="tierra-btn active" data-kilos="15">15kg</button>
+        </div>
+      </div>
+
+       <!-- Mini Planta / Suculenta o planta chica / Suculenta Cactus Bonsai -->
+            <div class="extra-option" data-extra="planta" data-price="8000">
+              <i class="fas fa-leaf"></i>
+              <h4>Mini Planta</h4>
+              <p>Suculenta o planta chica</p>
+              <div class="plantas-opciones">
+                <button class="planta-btn" data-planta="Suculenta">Suculenta</button>
+                <button class="planta-btn active" data-planta="Cactus">Cactus</button>
+                <button class="planta-btn" data-planta="Bonsai">Bonsai</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+
+  <script>
+    //Paleta de colores
+    const COLOR_MAP = {
+      "Blanco": "#ffffff",
+      "Negro": "#000000",
+      "Gris Claro": "#dcdcdc",
+      "Gris Oscuro": "#4f4f4f",
+      "Terracota": "#c46a3c",
+      "Arena": "#e0c097",
+      "Beige": "#f5f5dc",
+      "Crema": "#fffdd0",
+      "Verde Oliva": "#6b8e23",
+      "Verde Musgo": "#556b2f",
+      "Verde Menta": "#98ff98",
+      "Azul Marino": "#1f2a44",
+      "Azul Petróleo": "#005f6a",
+      "Celeste": "#87ceeb",
+      "Rosa Pastel": "#f4c2c2",
+      "Rosa Viejo": "#c08081",
+      "Amarillo": "#ffd700",
+      "Mostaza": "#d4a017",
+      "Rojo": "#c0392b",
+      "Bordó": "#800020"
+    };
+    
+    // Estado de configuración
+    let config = {
+      maceta: { id: "fallback", name: "Maceta", basePrice: 0 },
+      productoCargado: false,
+      color: null,
+      size: "Mediano",
+      cantidad: 1,
+      extrasSeleccionados: {
+        regalo: false,
+        tierra: false,
+        planta: false,
+      },
+      mensajeTarjeta: "",
+      tierraKilos: 15,
+      planta: "Cactus",
+    };
+
+    //Agregado de Ari
+    function getProductIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("product");
+    }
+
+    function bloquearPersonalizacion() {
+      document.getElementById("preview-nombre").textContent =
+      "⚠️ Primero Selecciona una maceta desde el catálogo";
+      
+      document.getElementById("preview-total").textContent = "$0";
+      
+      const btn = document.querySelector(".btn-agregar");
+      if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+        btn.style.cursor = "not-allowed";
+        btn.textContent = "Selecciona un producto primero";
+      }
+    }
+
+    // Cargar producto base desde API - Modificado por Ari
+    async function cargarProductos() {
+      try {
+        const productId = getProductIdFromURL();
+        
+        if (!productId) { 
+          bloquearPersonalizacion();
+          return;
+        }
+        
+        const response = await fetch(`/api/productos/${productId}`);
+        if (!response.ok) throw new Error("Producto no encontrado");
+        
+        const producto = await response.json();
+
+        config.productoCargado = true,
+        
+        config.maceta = {
+          id: producto._id,
+          name: producto.name,
+          basePrice: Number(producto.basePrice),
+          imageUrl: producto.imageUrl || null,
+          availableColors: producto.availableColors || []
+        };
+        
+        // nombre en preview
+        document.getElementById("preview-nombre").textContent = producto.name;
+        
+        // imagen base
+        if (config.maceta.imageUrl){
+          document.getElementById("maceta-preview").src = config.maceta.imageUrl;
+        }
+        
+        // 🎨 colores disponibles
+        renderColores(config.maceta.availableColors);
+        
+        updatePreview();
+      
+      } catch (error) {
+        console.error("Error cargando producto:", error);
+      }
+    }
+
+    //Agregado de Ari
+    function renderColores(colores) {
+      const container = document.querySelector(".selector-color");
+      container.innerHTML = "";
+      
+      if (!colores.length) {
+        container.innerHTML = "<p>Este producto no tiene colores disponibles</p>";
+        config.color = "null";
+        return;
+      }
+      
+      colores.forEach((colorNombre, index) => {
+        const div = document.createElement("div");
+        div.className = "color-opcion";
+        div.dataset.color = colorNombre;
+        
+        const hex = COLOR_MAP[colorNombre] || "#cccccc";
+        div.style.backgroundColor = hex;
+        
+        if (index === 0) {
+          div.classList.add("selected");
+          config.color = colorNombre;
+        }
+        
+        div.addEventListener("click", () => {
+          document
+            .querySelectorAll(".color-opcion")
+            .forEach(c => c.classList.remove("selected"));
+            
+          div.classList.add("selected");
+          config.color = colorNombre;
+          updatePreview();
+        });
+        
+        container.appendChild(div);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarProductos();
+      updateCartCount();
+      initEventListeners();
+    });
+
+    function initEventListeners() {
+      // Cantidad
+      document
+        .getElementById("cantidad-input")
+        .addEventListener("input", (e) => {
+          let qty = parseInt(e.target.value) || 1;
+          if (qty < 1) qty = 1;
+          if (qty > 100) qty = 100;
+          e.target.value = qty;
+          config.cantidad = qty;
+          updatePreview();
+        });
+
+      // Tamaño
+      document
+        .getElementById("size-select")
+        ?.addEventListener("change", (e) => {
+          config.size = e.target.value;
+          updatePreview();
+        });
+
+      // Extras (click en tarjeta, pero NO en textarea)
+      document.querySelectorAll(".extra-option").forEach((option) => {
+        option.addEventListener("click", (e) => {
+          if (e.target.tagName.toLowerCase() === "textarea") return;
+
+          const extra = option.dataset.extra;
+          const isActive = option.classList.toggle("selected");
+          config.extrasSeleccionados[extra] = isActive;
+
+          if (extra === "regalo") {
+            const textarea = option.querySelector(".tarjeta-input");
+            if (isActive) {
+              textarea.classList.add("active");
+            } else {
+              textarea.classList.remove("active");
+              textarea.value = "";
+              config.mensajeTarjeta = "";
+            }
+          }
+
+          updatePreview();
+        });
+      });
+
+      // Mensaje tarjeta
+      const textarea = document.getElementById("tarjeta-mensaje");
+      textarea.addEventListener("input", (e) => {
+        config.mensajeTarjeta = e.target.value.slice(0, 100);
+      });
+
+      // Tierra kilos
+      document.querySelectorAll(".tierra-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          document
+            .querySelectorAll(".tierra-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          config.tierraKilos = parseInt(btn.dataset.kilos);
+        });
+      });
+
+      // Plantas
+      document.querySelectorAll(".planta-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          document
+            .querySelectorAll(".planta-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          config.planta = btn.dataset.planta;
+        });
+      });
+    }
+
+    function updatePreview() {
+      const base = Number(config.maceta.basePrice || 0);
+      const cantidad = Number(config.cantidad || 1);
+
+      let extrasPrice = 0;
+      if (config.extrasSeleccionados.regalo) extrasPrice += 5000;
+      if (config.extrasSeleccionados.tierra) extrasPrice += 3000;
+      if (config.extrasSeleccionados.planta) extrasPrice += 8000;
+
+      const total = (base + extrasPrice) * cantidad;
+
+      document.getElementById("preview-nombre").textContent = config.maceta.name;
+      document.getElementById("preview-tamaño").textContent = config.size;
+      document.getElementById("preview-color").textContent = config.color;
+      document.getElementById("preview-cantidad").textContent = cantidad;
+      document.getElementById("preview-total").textContent = `$${total.toLocaleString()}`;
+
+      const extrasActivos = Object.entries(config.extrasSeleccionados)
+        .filter(([_, v]) => v)
+        .map(([k]) => k);
+      
+        document.getElementById("preview-extras").textContent =
+        extrasActivos.length ? extrasActivos.join(", ") : "Ninguno";
+    }
+
+    // Contador carrito
+    function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const el = document.getElementById("cartCount");
+      el.textContent = totalItems;
+      el.style.display = totalItems > 0 ? "flex" : "none";
+    }
+
+    //cambio de Ari
+    function addToCartGlobal(itemData) {
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      
+      const existing = cart.find(i => i.id === itemData.id);
+      
+      if (existing) {
+        existing.quantity += itemData.quantity;
+      } else {
+        cart.push(itemData);
+      }
+      
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+    }
+
+    //Cambio de Ari
+    function agregarAlCarrito(e) {
+
+      // 🔒 BLOQUEO SI NO HAY PRODUCTO CARGADO
+      if (!config.productoCargado) {
+        alert("⚠️ Primero debes elegir una maceta desde el catálogo");
+        window.location.href = "index.html";
+        return;
+      }
+      
+      const base = Number(config.maceta.basePrice);
+      let extrasPrice = 0;
+      const extras = [];
+      
+      if (config.extrasSeleccionados.regalo) {
+        extrasPrice += 5000;
+        extras.push("regalo");
+      }
+      if (config.extrasSeleccionados.tierra) {
+        extrasPrice += 3000;
+        extras.push("tierra");
+      }
+      if (config.extrasSeleccionados.planta) {
+        extrasPrice += 8000;
+        extras.push("planta");
+      }
+      
+      const unitPrice = base + extrasPrice;
+      
+      const productId = `custom-${config.maceta.id}-${config.color}-${extras.join("-") || "base"}`;
+      const productName = `${config.maceta.name} ${config.color}`;
+      
+      addToCartGlobal({
+        id: productId,
+        name: productName,
+        basePrice: unitPrice,
+        quantity: config.cantidad,
+        color: config.color,
+        size: config.size,
+        extras: extras,
+        mensajeTarjeta: config.mensajeTarjeta,
+        tierraKilos: config.tierraKilos,
+        planta: config.planta
+      });
+      
+      const btn = e.currentTarget;
+      const original = btn.innerHTML;
+      
+      btn.innerHTML = '<i class="fas fa-check"></i> ¡Agregado al carrito!';
+      btn.style.background = "#28a745";
+      
+      setTimeout(() => {
+        btn.innerHTML = original;
+        btn.style.background = "";
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

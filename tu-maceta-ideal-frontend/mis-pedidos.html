@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pedidos - Tu Maceta Ideal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #f5f7f2 0%, #e8f0e4 100%); color: #2d5016; }
+        /* Mismos estilos header/sidebar que carrito.html */
+        header { background: linear-gradient(135deg, #4a7c59 0%, #2d5016 100%); color: white; padding: 1rem 2rem; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .hamburger-menu { font-size: 1.8rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: all 0.3s; }
+        .hamburger-menu:hover { background: rgba(255,255,255,0.2); }
+        header h1 { margin-left: 1rem; flex: 1; }
+        .sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100vh; background: linear-gradient(180deg, #5a8a6f 0%, #3d5f4a 100%); transition: left 0.3s; z-index: 999; padding: 2rem 0; }
+        .sidebar.open { left: 0; }
+        .sidebar ul { list-style: none; padding: 2rem 0; }
+        .sidebar li { margin: 0.5rem 1.5rem; }
+        .sidebar a { color: white; text-decoration: none; display: block; padding: 1rem 1.5rem; border-radius: 12px; transition: all 0.3s; }
+        .sidebar a:hover { background: rgba(255,255,255,0.15); transform: translateX(10px); }
+        main { padding: 2rem; min-height: calc(100vh - 80px); }
+        
+        .pedidos-vacios { text-align: center; padding: 4rem; color: #666; }
+        .tabla-pedidos { background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(74,124,89,0.15); overflow: hidden; margin-top: 2rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1.5rem; text-align: left; }
+        th { background: linear-gradient(135deg, #4a7c59 0%, #2d5016 100%); color: white; font-weight: 600; }
+        .estado-pendiente { background: #fff3cd; color: #856404; padding: 0.5rem 1rem; border-radius: 20px; }
+        .estado-enviado { background: #d1ecf1; color: #0c5460; padding: 0.5rem 1rem; border-radius: 20px; }
+        .estado-entregado { background: #d4edda; color: #155724; padding: 0.5rem 1rem; border-radius: 20px; }
+    </style>
+</head>
+<body>
+    <header>
+        <i class="fas fa-bars hamburger-menu" id="hamburger-menu"></i>
+        <h1><i class="fas fa-box"></i> MIS PEDIDOS</h1>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="personalizar.html"><i class="fas fa-palette"></i> Personalizar</a></li>
+            <li><a href="carrito.html"><i class="fas fa-shopping-cart"></i> Carrito</a></li>
+            <li><a href="admin-panel.html"><i class="fas fa-cogs"></i> Admin</a></li>
+            <li><a href="mis-pedidos.html" style="background: rgba(255,255,255,0.2);"><i class="fas fa-box"></i> Mis Pedidos</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <h2 style="margin-bottom: 1rem;"><i class="fas fa-history"></i> Historial de Compras</h2>
+        
+        <div id="pedidos-container">
+            <div class="pedidos-vacios">
+                <i class="fas fa-box-open" style="font-size: 4rem; color: #e8f0e4;"></i>
+                <h3>No tienes pedidos</h3>
+                <p>¡Tu historial de compras aparecerá aquí!</p>
+            </div>
+            
+            <div id="tabla-pedidos" class="tabla-pedidos" style="display: none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Fecha</th>
+                            <th>Productos</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedidos-tbody">
+                        <!-- Pedidos cargados con JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        
+        //DATOS DE SESION (UNA SOLA VEZ)
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        const token = localStorage.getItem('userToken');
+        
+        // OCULTAR MENU ADMIN SI NO ES ADMIN
+        if (userData.rol !== 'admin') {
+            document.querySelectorAll('a').forEach(link => {
+                if (link.href.includes('admin')) {
+                    link.style.display = 'none';
+                }
+            });
+        }
+        
+        // 2. VERIFICAR CLIENTE LOGUEADO
+        if (!token || !userData.email) {
+            alert('❌ Inicia sesión para ver tus pedidos');
+            window.location.href = 'login-registro.html';
+            return;
+        }
+
+        // 1. MENÚ HAMBURGUESA
+        const hamburger = document.getElementById('hamburger-menu');
+        const sidebar = document.getElementById('sidebar');
+        if (hamburger && sidebar) {
+            hamburger.addEventListener('click', () => sidebar.classList.toggle('open'));
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        }
+        
+        // 3. CARGAR PEDIDOS DEL CLIENTE
+        try {
+            const token = localStorage.getItem('userToken');
+            
+            const response = await fetch(`/api/mis-pedidos?email=${userData.email}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const pedidos = await response.json();
+            
+            if (pedidos.error) {
+                document.getElementById('pedidos-container').innerHTML = `
+                <div class="pedidos-vacios">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ff6b35;"></i>
+                    <h3>${pedidos.error}</h3>
+                    <p><a href="login-registro.html">Inicia sesión</a> para ver tus pedidos</p>
+                    </div>
+                    `;
+                    return;
+                }
+                
+                // 4. MOSTRAR PEDIDOS
+                if (pedidos.length === 0) {
+                    document.querySelector('.pedidos-vacios').innerHTML = `
+                    <i class="fas fa-box-open" style="font-size: 4rem; color: #e8f0e4;"></i>
+                    <h3>No tienes pedidos</h3>
+                    <p>¡Tu historial de compras aparecerá aquí! <a href="personalizar.html">Haz tu primera compra</a></p>
+                    `;
+                } else {
+                    document.querySelector('.pedidos-vacios').style.display = 'none';
+                    document.getElementById('tabla-pedidos').style.display = 'block';
+                    
+                    document.getElementById('pedidos-tbody').innerHTML = pedidos.map(pedido => `
+                    <tr>
+                        <td><strong>#${pedido.idPedido}</strong></td>
+                        <td>${new Date(pedido.fecha).toLocaleDateString('es-AR')}</td>
+                        <td>${pedido.productos.map(p => `
+                            <div style="margin-bottom:6px;">
+                                <strong>${p.name}</strong><br>
+                            </div>
+                        `).join('')}</td>
+                        <td>$${pedido.total?.toLocaleString()}</td>
+                        <td><span class="estado-${pedido.estado}">${pedido.estado.toUpperCase()}</span></td>
+                        <td><button class="boton-primario ver-detalle-btn" data-pedido='${JSON.stringify(pedido)}' style="padding: 0.5rem 1rem; font-size: 0.9rem;">Ver Detalles</button></td>
+                        </tr>
+                        `).join('');
+
+                        document.querySelectorAll('.ver-detalle-btn').forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                const pedido = JSON.parse(btn.dataset.pedido);
+                                
+                                const lineasProductos = pedido.productos.map(p => {
+                                    let bloque = `• ${p.name}\n`;
+                                    bloque += `  Cantidad: ${p.quantity}\n`;
+                                    bloque += `  Precio: $${p.price}\n`;
+                                    
+                                    if (p.detalle && p.detalle.trim() !== '') {
+                                        bloque += `  --- Detalles ---\n`;
+                                        bloque += p.detalle
+                                        .split('\n')
+                                        .map(l => `  ${l}`)
+                                        .join('\n');
+                                    }
+                                    
+                                    return bloque;
+                                }).join('\n\n');
+                                
+                                alert(
+                                    `📦 Pedido #${pedido.idPedido}
+                                    
+                                    ${lineasProductos}
+                                    
+                                    💰 Total: $${pedido.total}
+                                    📌 Estado: ${pedido.estado}`
+                                );
+                            });
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    document.getElementById('pedidos-container').innerHTML = `
+                    <div class="pedidos-vacios">
+                        <i class="fas fa-wifi" style="font-size: 4rem; color: #ff6b35;"></i>
+                        <h3>Error de conexión</h3>
+                        <p>Verifica que el servidor esté corriendo en puerto 3000</p>
+                        </div>
+                        `;
+                    }
+                });
+    </script>
+</body>
+</html>

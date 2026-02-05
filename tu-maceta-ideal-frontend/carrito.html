@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tu Maceta Ideal - Carrito</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Tus estilos actuales + BOTONES + / - */
+        :root {
+            --verde-oscuro: #2d5016; --verde-principal: #4a7c59; --naranja: #ff6b35;
+            --sombra: 0 20px 60px rgba(74,124,89,0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #f5f7f2 0%, #e8f0e4 100%);
+            color: var(--verde-oscuro); min-height: 100vh; padding: 2rem;
+        }
+        
+        /* HEADER */
+        header { 
+            background: linear-gradient(135deg, var(--verde-principal) 0%, var(--verde-oscuro) 100%);
+            color: white; padding: 1rem 2rem; display: flex; align-items: center; 
+            gap: 1rem; margin-bottom: 2rem; border-radius: 12px; box-shadow: var(--sombra);
+            max-width: 1000px; margin: 0 auto 2rem; width: 100%;
+        }
+        .logo { font-size: 1.6rem; font-weight: 800; flex: 1; }
+        .cart-icon { position: relative; font-size: 1.5rem; cursor: pointer; }
+        .cart-count { 
+            position: absolute; top: -7px; right: -7px; background: var(--naranja); 
+            color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem;
+            display: flex; align-items: center; justify-content: center; font-weight: 700;
+        }
+
+        main { max-width: 1000px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: var(--verde-oscuro); }
+
+        /* CARRITO */
+        .cart-item {
+            background: white; border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: grid;
+            grid-template-columns: 100px 1fr auto 120px 80px; gap: 1.5rem; align-items: center;
+        }
+        .cart-item img { width: 100px; height: 100px; object-fit: cover; border-radius: 12px; }
+        .cart-details { flex: 1; }
+        .cart-details h3 { margin-bottom: 0.5rem; color: var(--verde-oscuro); }
+        .cart-price { font-size: 1.5rem; font-weight: 700; color: var(--verde-principal); }
+
+        /* ✅ BOTONES + / - / 🗑️ */
+        .quantity-controls {
+            display: flex; gap: 0.5rem; align-items: center; background: #f8f9fa;
+            padding: 0.5rem; border-radius: 25px;
+        }
+        .btn-quantity-cart {
+            width: 40px; height: 40px; border: none; border-radius: 50%; 
+            font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .decrease-quantity { background: var(--naranja); color: white; }
+        .decrease-quantity:hover { background: #e55a2b; transform: scale(1.05); }
+        .increase-quantity { background: var(--verde-principal); color: white; }
+        .increase-quantity:hover { background: var(--verde-oscuro); transform: scale(1.05); }
+        .quantity { font-weight: 700; min-width: 30px; text-align: center; }
+
+        .btn-remove {
+            background: #dc3545; color: white; border: none; width: 40px; height: 40px;
+            border-radius: 50%; cursor: pointer; font-size: 1.1rem; transition: all 0.3s;
+        }
+        .btn-remove:hover { background: #c82333; transform: scale(1.05); }
+
+        /* TOTAL */
+        .cart-total {
+            background: white; padding: 2.5rem; border-radius: 24px; box-shadow: var(--sombra);
+            text-align: center; margin-top: 2rem;
+        }
+        .total-price { font-size: 2.5rem; font-weight: 800; color: var(--verde-principal); margin: 1rem 0; }
+        .cta-primary {
+            background: linear-gradient(135deg, var(--verde-principal) 0%, var(--verde-oscuro) 100%);
+            color: white; border: none; padding: 1.5rem 4rem; border-radius: 50px;
+            font-size: 1.2rem; font-weight: 700; cursor: pointer; width: 100%;
+            transition: all 0.3s; text-transform: uppercase;
+        }
+        .cta-primary:hover { transform: translateY(-4px); box-shadow: var(--sombra); }
+
+        /* VACÍO */
+        .cart-empty {
+            text-align: center; padding: 4rem 2rem; color: #666; border: 2px dashed #e8f0e4;
+            border-radius: 24px; grid-column: 1 / -1;
+        }
+        .cart-empty i { font-size: 6rem; margin-bottom: 1rem; color: #e8f0e4; }
+
+        @media (max-width: 768px) {
+            .cart-item { grid-template-columns: 1fr; text-align: center; gap: 1rem; }
+            main { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><i class="fas fa-seedling"></i> Tu Maceta Ideal</div>
+        <div class="cart-icon" onclick="window.location.href='carrito.html'" title="Ver carrito">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+    </header>
+
+    <main>
+        <h1><i class="fas fa-shopping-cart"></i> Mi Carrito ( <span id="total-items">0</span> )</h1>
+        
+        <div id="cart-container">
+            <!-- ✅ CARGADO CON JS -->
+        </div>
+
+        <div id="cart-total" class="cart-total" style="display: none;">
+            <h3>Total: <span id="total-items-display">0</span> productos</h3>
+            <div class="total-price" id="total-price">$0</div>
+            <button class="cta-primary" onclick="checkout()">
+                <i class="fas fa-credit-card"></i> Finalizar Compra
+            </button>
+        </div>
+
+        <!-- VACÍO POR DEFECTO -->
+        <div class="cart-empty" id="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h2>Tu carrito está vacío</h2>
+            <p>Agrega productos desde <a href="index.html">la página principal</a></p>
+        </div>
+    </main>
+
+    <script>
+        // ✅ FUNCIONES CARRITO COMPLETAS
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.querySelectorAll('#cartCount, .cart-count').forEach(el => {
+                el.textContent = totalItems;
+                el.style.display = totalItems > 0 ? 'flex' : 'none';
+            });
+            document.getElementById('total-items').textContent = totalItems;
+            document.getElementById('total-items-display').textContent = totalItems;
+        }
+
+        function increaseQuantity(productId) {
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            if (itemIndex !== -1) {
+                cart[itemIndex].quantity += 1;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderCart();
+                updateCartCount();
+            }
+        }
+
+        function decreaseQuantity(productId) {
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            if (itemIndex !== -1) {
+                if (cart[itemIndex].quantity > 1) {
+                    cart[itemIndex].quantity -= 1;
+                } else {
+                    cart.splice(itemIndex, 1);
+                }
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderCart();
+                updateCartCount();
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+            updateCartCount();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-container');
+            const emptyCart = document.getElementById('empty-cart');
+            const cartTotal = document.getElementById('cart-total');
+
+            if (cart.length === 0) {
+                container.innerHTML = '';
+                emptyCart.style.display = 'block';
+                cartTotal.style.display = 'none';
+                return;
+            }
+
+            emptyCart.style.display = 'none';
+            cartTotal.style.display = 'block';
+
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item" data-product-id="${item.id}">
+                    <img src="https://picsum.photos/100/100?random=${item.id}" alt="${item.name}">
+                    <div class="cart-details">
+                        <h3>${item.name}</h3>
+                        <p>$${item.basePrice.toLocaleString()} c/u</p>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="btn-quantity-cart decrease-quantity" onclick="decreaseQuantity('${item.id}')">-</button>
+                        <span class="quantity">${item.quantity}</span>
+                        <button class="btn-quantity-cart increase-quantity" onclick="increaseQuantity('${item.id}')">+</button>
+                    </div>
+                    <div class="cart-price">$${(item.basePrice * item.quantity).toLocaleString()}</div>
+                    <button class="btn-remove" onclick="removeFromCart('${item.id}')">🗑️</button>
+                </div>
+            `).join('');
+
+            // Total
+            const total = cart.reduce((sum, item) => sum + (item.basePrice * item.quantity), 0);
+            document.getElementById('total-price').textContent = `$${total.toLocaleString()}`;
+        }
+
+        function checkout() {
+            if (cart.length === 0) return alert('Carrito vacío');
+            localStorage.setItem('checkoutCart', JSON.stringify(cart));
+            window.location.href = 'checkout.html';
+        }
+
+        // INICIALIZAR
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCart();
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>
