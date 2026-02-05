@@ -17,10 +17,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../tu-maceta-ideal-frontend'))); // ← FRONTEND
 
-// ✅ MongoDB
-mongoose.connect('mongodb://localhost:27017/tu-maceta-ideal')
-  .then(() => console.log('✅ MongoDB conectado'))
-  .catch(err => console.error('❌ MongoDB:', err));
+// ✅ Mongo
+// Busca esta línea y asegúrate de que use process.env.MONGODB_URI
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("✅ MongoDB conectado exitosamente a la nube"))
+  .catch(err => console.error("❌ Error al conectar MongoDB:", err));
+
 
 //Cargar rutas
 require('./routes/productos')(app);
