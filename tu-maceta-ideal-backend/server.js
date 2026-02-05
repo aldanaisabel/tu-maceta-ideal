@@ -33,7 +33,7 @@ require('./routes/auth')(app);
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
 
-  if (email === 'macetasideal@gmail.com' && password === '1234') {
+  if (email === 'macetasideal@gmail.com' && password === '46356397') {
     const token = jwt.sign(
       { email, rol: 'admin' },
       JWT_SECRET,

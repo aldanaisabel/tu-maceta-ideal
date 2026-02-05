@@ -172,6 +172,11 @@
         </div>
     </div>
     
+            <div class="link">
+            ¿Ya tenés cuenta? <a href="login.html">Iniciar sesión</a>
+        </div>
+    </div>
+    
     <script>
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -180,34 +185,35 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const msg = document.getElementById('msg');
+        const btn = e.target.querySelector('button');
         
-        msg.innerHTML = '';
-        
+        msg.innerHTML = '<div style="color: #2d5016;">Procesando...</div>';
+        btn.disabled = true;
+
         try {
             const res = await fetch('/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password })
+                body: JSON.stringify({ nombre: name, name: name, email, password })
             });
             
             const data = await res.json();
             
             if (!res.ok) {
-                msg.innerHTML = `<div class="error">${data.error}</div>`;
+                msg.innerHTML = `<div class="error">${data.error || data.message || 'Error en el registro'}</div>`;
+                btn.disabled = false;
                 return;
             }
             
-            msg.innerHTML = `<div class="success">Registro exitoso. Redirigiendo...</div>`;
-            
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 1500);
+            msg.innerHTML = `<div class="success">¡Registro exitoso! Redirigiendo...</div>`;
+            setTimeout(() => { window.location.href = 'login.html'; }, 1500);
         
         } catch (err) {
-            msg.innerHTML = `<div class="error">Error de conexión</div>`;
+            console.error("Error en Fetch:", err);
+            msg.innerHTML = `<div class="error">Error de conexión con el servidor</div>`;
+            btn.disabled = false;
         }
-        });
-</script>
-
+    });
+    </script>
 </body>
 </html>
