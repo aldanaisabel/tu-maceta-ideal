@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu Maceta Ideal - Macetas Personalizadas Premium</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: linear-gradient(135deg, #4a7c59 0%, #2d5016 100%);
+      --secondary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --accent: #ff6b35;
+      --text-dark: #2d5016;
+      --text-light: #718096;
+      --bg-light: #f8fafc;
+      --white: #ffffff;
+      --shadow: 0 20px 60px rgba(74,124,89,0.15);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-light); color: var(--text-dark); line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--primary); color: white; padding: 1rem 2rem;
+      position: sticky; top: 0; z-index: 1000; box-shadow: var(--shadow);
+      display: flex; align-items: center;
+    }
+    .hamburger { font-size: 1.8rem; cursor: pointer; padding: 0.5rem; border-radius: 12px; transition: all 0.3s; }
+    .hamburger:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+    .logo { margin-left: 1rem; flex: 1; font-size: 1.6rem; font-weight: 800; }
+    .cart-icon { position: relative; font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 50%; transition: all 0.3s; }
+    .cart-icon:hover { background: rgba(255,255,255,0.2); }
+    .cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed; left: -320px; top: 0; width: 300px; height: 100vh;
+      background: var(--primary); transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 999; padding: 2rem 0; box-shadow: 4px 0 30px rgba(0,0,0,0.2);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-nav { list-style: none; padding: 1rem 0; }
+    .sidebar-nav li { margin: 0.25rem 1.5rem; }
+    .sidebar-nav a {
+      color: white; text-decoration: none; display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.5rem; border-radius: 16px; transition: all 0.3s; font-weight: 500;
+    }
+    .sidebar-nav a:hover { background: rgba(255,255,255,0.15); transform: translateX(8px); }
+
+    /* MAIN */
+    main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+    @media (max-width: 768px) { main { padding: 1rem; } }
+
+    /* HERO */
+    .hero {
+      background: var(--white); border-radius: 28px; padding: 4rem; margin-bottom: 4rem;
+      box-shadow: var(--shadow); display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: center; position: relative; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; top: 0; right: 0; width: 300px; height: 300px; background: radial-gradient(circle, var(--accent) 20%, transparent); opacity: 0.25;   /* 🔹 Opción A: baja intensidad */ z-index: 0;      /* 🔹 Opción B: al fondo */ }
+    .hero > * { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; }
+    .hero p { font-size: 1.25rem; color: var(--text-light); margin-bottom: 2rem; }
+    .cta-primary {
+      background: var(--primary); color: white; border: none; padding: 1.25rem 3rem;
+      border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 0.75rem;
+      transition: all 0.3s; box-shadow: 0 15px 40px rgba(74,124,89,0.3);
+    }
+    .cta-primary:hover { transform: translateY(-4px); box-shadow: 0 25px 50px rgba(74,124,89,0.4); }
+    .hero-image { position: relative; }
+    .hero-image img { width: 100%; height: 450px; object-fit: cover; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+
+    /* FEATURED */
+    .featured { margin-bottom: 4rem; }
+    .section-header { text-align: center; margin-bottom: 3.5rem; position: relative; }
+    .section-header h2 { font-size: 2.8rem; font-weight: 800; background: var(--primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .section-badge { position: absolute; right: 0; top: -15px; background: var(--accent); color: white; padding: 0.5rem 1.5rem; border-radius: 25px; font-weight: 700; font-size: 0.9rem; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+    .product-card {
+      background: var(--white); border-radius: 24px; padding: 2.5rem 2rem; text-align: center;
+      box-shadow: var(--shadow); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative; overflow: hidden;
+    }
+    .product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary); transform: scaleX(0); transition: transform 0.3s; }
+    .product-card:hover { transform: translateY(-12px); box-shadow: 0 35px 80px rgba(74,124,89,0.25); }
+    .product-card:hover::before { transform: scaleX(1); }
+    .product-image { width: 100%; height: 220px; object-fit: cover; border-radius: 20px; margin-bottom: 1.5rem; }
+    .product-card h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .product-card p { color: var(--text-light); margin-bottom: 1.25rem; }
+    .price { font-size: 2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1.5rem; }
+    .cta-secondary {
+      background: var(--white); color: var(--text-dark); border: 2px solid var(--primary);
+      padding: 1rem 2.5rem; border-radius: 50px; font-weight: 700; cursor: pointer;
+      text-decoration: none; display: inline-block; transition: all 0.3s;
+    }
+    .cta-secondary:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+
+    /* STATS */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin: 4rem 0; text-align: center; }
+    .stat { padding: 2rem; }
+    .stat-number { font-size: 3rem; font-weight: 800; background: var(--primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: block; }
+    .stat-label { color: var(--text-light); font-size: 1.1rem; margin-top: 0.5rem; }
+
+    /* FOOTER */
+    footer { background: var(--primary); color: white; text-align: center; padding: 3rem 2rem 2rem; margin-top: 5rem; }
+    .footer-content { max-width: 1200px; margin: 0 auto; }
+
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; text-align: center; gap: 2rem; padding: 2.5rem 1.5rem; }
+      .products-grid { grid-template-columns: 1fr; }
+    }
+
+    /* 🔒 FIX botón "Agregar" que desaparece */ /*Agrgado Ari*/
+    .product-card .cta-secondary { opacity: 1 !important; visibility: visible !important; pointer-events: auto; }
+    .product-card:hover .cta-secondary { opacity: 1; visibility: visible; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER --> 
+  
+<header>
+  <i class="fas fa-bars hamburger" id="hamburger"></i>
+  <div class="logo">
+    <i class="fas fa-seedling"></i> Tu Maceta Ideal
+  </div> 
+  <div class="cart-icon" onclick="window.location.href='carrito.html'">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-count" id="cartCount">0</span>
+  </div>
+</header>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-nav">
+            <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="personalizar.html"><i class="fas fa-palette"></i> Personalizar</a></li>
+            <li><a href="carrito.html"><i class="fas fa-shopping-cart"></i> Carrito</a></li>
+            <li><a href="mis-pedidos.html"><i class="fas fa-box"></i> Mis Pedidos</a></li>
+          <li class="admin-section">
+  <div style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+    <h4 style="color: #ffeb3b; margin-bottom: 1rem; font-size: 1.1rem;">
+      <i class="fas fa-crown"></i> 👑 Panel Administrador
+    </h4>
+    <input type="email" id="adminEmail" placeholder="macetasideal@gmail.com" 
+           style="width:100%; padding:12px; margin:8px 0; border-radius:12px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); color:white; font-size:14px;">
+    <input type="password" id="adminPass" placeholder="46356397" 
+           style="width:100%; padding:12px; margin:8px 0; border-radius:12px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); color:white; font-size:14px;">
+    <button onclick="loginAdmin()" id="adminLoginBtn"
+            style="width:100%; padding:14px; background:linear-gradient(135deg, #ff6b35, #f7931e); color:white; border:none; border-radius:25px; font-weight:700; font-size:16px; cursor:pointer; transition:all 0.3s;">
+      🚀 ACCEDER AL PANEL
+    </button>
+    <div id="adminStatus" style="margin-top:10px; font-size:12px;"></div>
+  </div>
+</li>
+            <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+        </ul>
+    </nav>
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <div>
+                <h1>Diseña Tu Maceta Perfecta</h1>
+                <p>Maceta personalizadas hechas a mano en Buenos Aires,Argentina. Elige tamaño, color, textura y estilo. Listas en 48hs.</p>
+                <a href="personalizar.html" class="cta-primary">
+                    <i class="fas fa-magic"></i> Personaliza Tu Maceta
+                </a>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Maceta premium">
+            </div>
+        </section>
+    <!-- STATS -->
+    <section class="stats">
+      <div class="stat">
+        <span class="stat-number">+500</span>
+        <span class="stat-label">Macetas Vendidas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">72hs</span>
+        <span class="stat-label">Producción</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Hecho en Argentina</span>
+      </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS DINÁMICO -->
+    <section class="featured">
+      <div class="section-header">
+        <h2>Macetas Más Vendidas</h2>
+        <div class="section-badge">🔥 Top 3</div>
+      </div>
+      <div class="products-grid" id="featured-products">
+        <!-- Aquí se inyectan las cards -->
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p><i class="fas fa-seedling"></i> © 2025 Tu Maceta Ideal - Hecho con ❤️ en Buenos Aires, Argentina</p>
+    </div>
+  </footer>
+
+<script>
+// 🔐 LOGIN ADMIN DESDE sidebar
+async function loginAdmin() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const password = document.getElementById('adminPass').value.trim();
+  const status = document.getElementById('adminStatus');
+  const btn = document.getElementById('adminLoginBtn');
+  
+  // Validar credenciales ADMIN
+  if(email === 'macetasideal@gmail.com' && password === '46356397') {
+    // ✅ GUARDAR TOKEN ADMIN
+    localStorage.setItem('adminToken', 'tu_maceta_admin_2026');
+    localStorage.setItem('adminEmail', email);
+    
+    // Animación éxito
+    status.innerHTML = '<span style="color:#4ade80;">✅ ¡Acceso concedido! Redirigiendo...</span>';
+    btn.innerHTML = '👑 Admin ON';
+    btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+    
+    // Redirigir en 1s
+    setTimeout(() => {
+      window.location.href = '/admin-panel.html';
+    }, 1000);
+    
+  } else {
+    // ❌ Error
+    status.innerHTML = '<span style="color:#f87171;">❌ Credenciales inválidas</span>';
+    btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+    setTimeout(() => {
+      status.innerHTML = '';
+      btn.style.background = 'linear-gradient(135deg, #ff6b35, #f7931e)';
+      btn.innerHTML = '🚀 ACCEDER AL PANEL';
+    }, 2000);
+  }
+}
+</script>
+  <!-- SOLO este script, todo el JS está en main.js -->
+  <script src="js/main.js"></script>
+</body>
+</html>
+
