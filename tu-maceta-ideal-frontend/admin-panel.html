@@ -254,6 +254,28 @@
         CÓDIGO COMPLETO MODERNO - FUNCIONAL
     ================================ -->
     <script>
+
+// 🔐 PROTECCIÓN ADMIN (AL INICIO del script)
+document.addEventListener('DOMContentLoaded', function() {
+  const adminToken = localStorage.getItem('adminToken');
+  
+  if(adminToken !== 'tu_maceta_admin_2026') {
+    document.body.innerHTML = `
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg, #4a7c59 0%, #2d5016 100%); color:white; text-align:center; padding:2rem;">
+        <i class="fas fa-crown" style="font-size:4rem; color:#ffeb3b; margin-bottom:1rem;"></i>
+        <h1 style="font-size:2.5rem; margin-bottom:1rem;">👑 Panel Administrativo</h1>
+        <p style="font-size:1.2rem; margin-bottom:2rem; max-width:500px;">Accede desde la página principal usando tus credenciales de administrador.</p>
+        <a href="/" style="background:#ff6b35; color:white; padding:1rem 2rem; border-radius:25px; text-decoration:none; font-weight:700; box-shadow:0 10px 30px rgba(255,107,53,0.4);">🏠 Volver a Inicio</a>
+      </div>
+    `;
+    return;
+  }
+  
+  // Si llega aquí = ES ADMIN → cargar panel normal
+  initAdmin(); // Tu función existente
+});
+
+
     // ================================
     // CÓDIGO COMPLETO CORREGIDO
     // ================================
@@ -269,24 +291,11 @@
     const PALETA_COLORES = [
         "Blanco",
         "Negro",
-        "Gris Claro",
-        "Gris Oscuro",
         "Terracota",
-        "Arena",
-        "Beige",
-        "Crema",
-        "Verde Oliva",
-        "Verde Musgo",
-        "Verde Menta",
-        "Azul Marino",
-        "Azul Petróleo",
-        "Celeste",
-        "Rosa Pastel",
-        "Rosa Viejo",
-        "Amarillo",
-        "Mostaza",
-        "Rojo",
-        "Bordó"
+        "Verde",
+        "turquesa",
+        "hueso",
+        "gris",
     ];
 
     // 🎨 Render paleta de colores (ADMIN)
@@ -319,7 +328,7 @@
         ).map(input => input.value);
     }
 
-    // 📊 Estadísticas Dashboard
+    // 📊 Estado de los pedidos
     function loadStats() {
         const stats = {
             pendientes: pedidos.filter(p => p.estado?.toLowerCase() === 'pendiente').length,
