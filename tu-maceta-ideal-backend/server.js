@@ -1,16 +1,17 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const express = require('express');
 const mongoURI = process.env.MONGODB_URI;
 const mongoose = require('mongoose');
-const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;  // ← SOLO ESTA VEZ
+
 
 // ✅ MIDDLEWARES (SIN public/)
 app.use(cors());

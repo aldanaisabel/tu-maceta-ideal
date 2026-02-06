@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Tu Maceta Ideal</title>
+    <title>Login Admin - Tu Maceta Ideal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -138,13 +138,13 @@
         </div>
         
         <h1 class="title">Tu Maceta Ideal</h1>
-        <p class="subtitle">Ingresá a tu cuenta</p>
+        <p class="subtitle">Accede a tu Panel de Administración</p>
         
         <form id="loginForm">
             <div class="form-group">
                 <label for="email">Correo Electrónico</label>
                 <div class="input-wrapper">
-                    <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required autocomplete="email">
+                    <input type="email" id="email" name="email" placeholder="macetasideal@gmail.com" required autocomplete="email">
                     <i class="fas fa-envelope input-icon"></i>
                 </div>
             </div>
@@ -160,19 +160,30 @@
             <button type="submit" class="login-btn">
                 <div class="btn-content">
                     <span class="default">
-                        <i class="fas fa-sign-in-alt"></i> Ingresar
+                        <i class="fas fa-sign-in-alt"></i> Entrar al Panel
                     </span>
                     <span class="loading">
                         <i class="fas fa-spinner fa-spin"></i> Cargando...
                     </span>
                 </div>
             </button>
-            <p>
-                ¿No tenés cuenta?
-                <a href="registro.html">Registrate</a>
-            </p>
         </form>
         
+        <div class="credentials">
+            <div class="credentials-title">
+                <i class="fas fa-key"></i> Credenciales de Administrador
+            </div>
+            <div class="creds-grid">
+                <div class="cred-item">
+                    <div class="cred-label">Email</div>
+                    <div class="cred-value">macetasideal@gmail.com</div>
+                </div>
+                <div class="cred-item">
+                    <div class="cred-label">Contraseña</div>
+                    <div class="cred-value">1234</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -183,7 +194,8 @@
             const loadingContent = btn.querySelector('.loading');
             const emailInput = document.getElementById('email');
 
-            // Modificado por Ari
+            // Auto-fill email
+            emailInput.value = 'macetasideal@gmail.com';
             emailInput.focus();
 
             form.addEventListener('submit', async (e) => {
@@ -203,7 +215,8 @@
                     const response = await fetch('/api/login', {
                         method: 'POST',
                         headers: { 
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
                         },
                         body: JSON.stringify({ email, password })
                     });
@@ -211,7 +224,7 @@
                     const data = await response.json();
                     console.log('📥 Login response:', data);
 
-                    if (data.token && data.usuario) {
+                    if (data.success) {
                         // Success state
                         btn.classList.add('success');
                         defaultContent.innerHTML = '<i class="fas fa-check-circle"></i> ¡Bienvenido!';
@@ -219,21 +232,15 @@
                         
                         // Store data
                         localStorage.setItem('userToken', data.token);
-                        localStorage.setItem('userData', JSON.stringify(data.usuario));
+                        localStorage.setItem('userData', JSON.stringify(data.user));
                         
                         // Redirect
                         setTimeout(() => {
-                            if (data.usuario.rol === 'admin') {
-                                window.location.href = 'admin-panel.html';
-                            } else {
-                                window.location.href = 'index.html';
-                            }
-                        }, 1000);
-                    
+                            window.location.href = data.rol === 'admin' ? 'admin-panel.html' : 'index.html';
+                        }, 1200);
                     } else {
-                        throw new Error('Credenciales inválidas');
+                        throw new Error(data.message || 'Credenciales inválidas');
                     }
-                
                 } catch (error) {
                     console.error('❌ Login error:', error);
                     
@@ -255,6 +262,13 @@
                     loadingContent.classList.remove('show');
                     defaultContent.style.display = 'flex';
                     btn.classList.remove('success');
+                }
+            });
+
+            // Enter key support
+            document.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !btn.disabled) {
+                    form.dispatchEvent(new Event('submit'));
                 }
             });
         });
