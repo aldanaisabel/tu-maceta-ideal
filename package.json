@@ -4,7 +4,7 @@
   "description": "Backend para Tu Maceta Ideal",
   "main": "server.js",
   "scripts": {
-    "start": "node tu-maceta-ideal-backend/server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
