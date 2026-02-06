@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoURI = process.env.MONGODB_URI;
+const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
