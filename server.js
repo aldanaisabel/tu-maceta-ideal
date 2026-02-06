@@ -1,5 +1,5 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config(); // ← Render Environment Variables
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -9,16 +9,16 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || 'tu_maceta_super_secreto_2026';
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../tu-maceta-ideal-frontend')));
+app.use(express.static(path.join(__dirname, 'tu-maceta-ideal-frontend'))); // ← FIJO
 
 // MongoDB
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI || '')
   .then(() => console.log("✅ MongoDB conectado exitosamente"))
   .catch(err => console.error("❌ MongoDB error:", err));
 
@@ -33,23 +33,21 @@ app.post('/api/login', (req, res) => {
   }
 });
 
-// ✅ FIX Express 5 - Regex wildcard
+// ✅ SIRVE index.html DESDE RAÍZ
 app.all(/(.*)/, (req, res) => {
-  const frontendPath = path.join(__dirname, '../tu-maceta-ideal-frontend');
-  const fileName = req.path === '/' ? 'index.html' : req.path.replace('/', '');
-  const filePath = path.join(frontendPath, fileName);
+  const filePath = path.join(__dirname, 'index.html'); // ← RAÍZ ✅
   
-  console.log('📄 Buscando:', fileName);
+  console.log('📄 Sirviendo index.html desde RAÍZ');
   
   if (fs.existsSync(filePath)) {
-    console.log('✅ Encontrado:', fileName);
+    console.log('✅ index.html encontrado');
     res.sendFile(filePath);
   } else {
-    console.log('❌ No encontrado, sirviendo index.html');
-    res.sendFile(path.join(frontendPath, 'index.html'));
+    console.log('❌ index.html no encontrado');
+    res.status(404).send('Frontend no disponible');
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 http://localhost:${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
