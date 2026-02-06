@@ -6,9 +6,56 @@
     <title>Tu Maceta Ideal - Detalle de Producto</title>
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS MEJORADO PARA PLAZO SELECTOR */
+        #plazoSelector {
+            margin: 15px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        #plazoIndividual {
+            font-weight: bold; 
+            color: #28a745;
+            font-size: 14px;
+        }
+        #plazoMayorista {
+            margin-top: 10px;
+        }
+        #plazoMayorista .mayorista-badge {
+            background: #e8f5e8; 
+            padding: 10px; 
+            border-radius: 6px; 
+            border-left: 4px solid #28a745;
+            margin-bottom: 12px;
+        }
+        #plazoMayorista label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: white;
+            margin: 6px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        #plazoMayorista label:hover {
+            background: #e8f5e8;
+            transform: translateX(4px);
+        }
+        .opciones-cantidad.mayorista {
+            background: #fff3e0 !important;
+            border: 2px solid #ff9800 !important;
+            border-radius: 8px !important;
+            padding: 12px !important;
+        }
+    </style>
 </head>
 <body>
-
     <header>
         <i class="fas fa-bars hamburger-menu" id="hamburger-menu"></i>
         <h1>TU MACETA IDEAL</h1>
@@ -42,22 +89,55 @@
         <section id="producto-detalle">
             <div class="galeria-producto">
                 <img src="https://via.placeholder.com/400x400?text=Maceta+Cuadrada+Flor" alt="Maceta Cuadrada Flor">
+            </div>
+
+            <div class="producto-info">
+                <h2 id="nombreProducto">Maceta de Cemento Artesanal</h2>
+                <p class="precio-producto" id="precioProducto">$2500</p>
+
+                <!-- SELECTOR DE COLOR -->
+                <div class="opciones-color">
+                    <span class="etiqueta-color">Color:</span>
+                    <div class="selector-color">
+                        <button class="color-opcion selected" data-color="blanco" style="background: #f5f5f5;"></button>
+                        <button class="color-opcion" data-color="gris" style="background: #8D8D8D;"></button>
+                        <button class="color-opcion" data-color="negro" style="background: #2C2C2C;"></button>
+                        <button class="color-opcion" data-color="verde" style="background: #4CAF50;"></button>
+                        <button class="color-opcion" data-color="terracota" style="background: #D2691E;"></button>
+                    </div>
                 </div>
 
-            <div class="info-producto">
-                <h2>Maceta Cuadrada Flor</h2>
-                <p class="descripcion-corta">La maceta es ideal para plantas grandes.</p>
-                <p class="precio-producto">Precio: <span>$ 20.000</span></p>
-
-                <div class="opciones-cantidad">
-                    <button class="btn-cantidad">-</button>
-                    <input type="number" value="1" min="1" class="input-cantidad">
-                    <button class="btn-cantidad">+</button>
-                    <button class="boton-primario add-to-cart">agregar al carrito</button>
+                <!-- CANTIDAD Y PLAZO MAYORISTA -->
+                <div class="opciones-cantidad" id="opcionesCantidad">
+                    <button class="btn-cantidad resta">-</button>
+                    <input type="number" value="1" min="1" class="input-cantidad" name="quantity">
+                    <button class="btn-cantidad suma">+</button>
+                    <button class="boton-primario add-to-cart">Agregar al carrito</button>
                 </div>
 
+                <!-- ✅ SELECTOR DE PLAZO (CORREGIDO) -->
+                <div id="plazoSelector">
+                    <div id="plazoIndividual">
+                        <small id="plazoTexto">4-6 días 🏭 Hecho a mano</small>
+                    </div>
+                    <div id="plazoMayorista">
+                        <div class="mayorista-badge">
+                            <strong>🎉 PEDIDO MAYORISTA (15+ unidades)</strong>
+                        </div>
+                        <label>
+                            <input type="radio" name="plazo_mayorista" value="1_mes" checked> 
+                            📅 Entrega en 1 mes
+                        </label>
+                        <label>
+                            <input type="radio" name="plazo_mayorista" value="2_meses"> 
+                            📅 Entrega en 2 meses
+                        </label>
+                    </div>
+                </div>
+
+                <!-- SELECTOR DE MEDIDA -->
                 <div class="opciones-medida">
-                    <span class="etiqueta-medida boton-primario">medida:</span>
+                    <span class="etiqueta-medida boton-primario">Medida:</span>
                     <div class="selector-medida">
                         <button class="medida-opcion" data-medida="chica" data-dimension="40x60">chica <br> 40x60</button>
                         <button class="medida-opcion selected" data-medida="mediana" data-dimension="60x80">mediana <br> 60x80</button>
@@ -65,23 +145,77 @@
                     </div>
                 </div>
 
+                <!-- EXTRAS OPCIONALES -->
+                <div class="opciones-extras">
+                    <h4>Agregar extras:</h4>
+                    <label><input type="checkbox" name="extras" value="tarjeta"> Tarjeta regalo (+$200) <small>Texto personalizado</small></label>
+                    <label><input type="checkbox" name="extras" value="planta"> Planta nativa (+$500)</label>
+                    <label><input type="checkbox" name="extras" value="tierra"> Tierra orgánica (+$300)</label>
+                </div>
+
                 <div class="metodos-pago-envio">
                     <h3>Métodos de pago y envío:</h3>
                     <ul>
                         <li><i class="fas fa-credit-card"></i> Tarjetas de crédito/débito</li>
                         <li><i class="fas fa-money-bill-wave"></i> Efectivo</li>
-                        <li><i class="fas fa-shipping-fast"></i> Envío a domicilio</li>
-                        <li><i class="fas fa-store"></i> Retiro en tienda</li>
+                        <li><i class="fas fa-shipping-fast"></i> Envío a domicilio (CABA mismo día)</li>
+                        <li><i class="fas fa-store"></i> Retiro en taller (Belgrano)</li>
                     </ul>
                 </div>
             </div>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2023 Tu Maceta Ideal. Todos los derechos reservados.</p>
-    </footer>
-   <script src="js/main.js"></script>
- 
 
+    <footer>
+        <p>© 2026 Tu Maceta Ideal - Macetas de cemento artesanales 💚 | CABA, Argentina</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // ✅ JAVASCRIPT MEJORADO Y CORREGIDO
+        function actualizarPlazo() {
+            const cantidadInput = document.querySelector('.input-cantidad');
+            const cantidad = parseInt(cantidadInput.value) || 0;
+            const plazoInd = document.getElementById('plazoIndividual');
+            const plazoMay = document.getElementById('plazoMayorista');
+            const plazoTexto = document.getElementById('plazoTexto');
+            const opcionesCantidad = document.getElementById('opcionesCantidad');
+            
+            if (cantidad >= 15) {
+                plazoInd.style.display = 'none';
+                plazoMay.style.display = 'block';
+                opcionesCantidad.classList.add('mayorista');
+            } else {
+                plazoInd.style.display = 'block';
+                plazoMay.style.display = 'none';
+                opcionesCantidad.classList.remove('mayorista');
+                
+                if (cantidad === 1) {
+                    plazoTexto.innerHTML = '4-6 días 🏭 Hecho a mano';
+                } else if (cantidad <= 3) {
+                    plazoTexto.innerHTML = '7-10 días 🏭 Hecho a mano';
+                } else {
+                    plazoTexto.innerHTML = '12-15 días 🏭 Consultar';
+                }
+            }
+        }
+
+        // Botones cantidad
+        document.querySelector('.resta').addEventListener('click', () => {
+            const input = document.querySelector('.input-cantidad');
+            if (input.value > 1) input.value--;
+            actualizarPlazo();
+        });
+        
+        document.querySelector('.suma').addEventListener('click', () => {
+            const input = document.querySelector('.input-cantidad');
+            input.value++;
+            actualizarPlazo();
+        });
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', actualizarPlazo);
+        document.querySelector('.input-cantidad').addEventListener('input', actualizarPlazo);
+    </script>
 </body>
 </html>

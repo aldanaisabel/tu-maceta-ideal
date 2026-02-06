@@ -4,6 +4,34 @@ const isAdmin = require('../middleware/isAdmin');
 const Pedido = require('../models/Pedido');
 const Producto = require('../models/Producto');
 const { enviarMailPedido } = require('../utils/mailer');
+
+app.post('/api/pedidos', async (req, res) => {
+  const { configuracion, extras, plazoEntrega } = req.body;
+  
+  // Detectar tipo de pedido
+  const tipoPedido = configuracion.cantidad >= 15 ? 'mayorista' : 'individual';
+  
+  const pedido = new Pedido({
+    configuracion,
+    extras,
+    tipoPedido,
+    plazoEntrega,
+    fechaEntregaEstimada: calcularFechaEntrega(plazoEntrega, configuracion.cantidad)
+  });
+  
+  await pedido.save();
+  res.json(pedido);
+});
+
+function calcularFechaEntrega(plazo, cantidad) {
+  const hoy = new Date();
+  if (cantidad >= 15 && plazo === '1_mes') return new Date(hoy.setMonth(hoy.getMonth() + 1));
+  if (cantidad >= 15 && plazo === '2_meses') return new Date(hoy.setMonth(hoy.getMonth() + 2));
+  // Lógica para individuales (4-6 días, etc)
+  return new Date(hoy.setDate(hoy.getDate() + 5));
+}
+
+
 module.exports = function(app) {
 
   function obtenerIdBase(productoId) {
