@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const mongoose = require('mongoose');
+const mongoURI = process.env.MONGODB_URI;
 const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
@@ -18,11 +18,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../tu-maceta-ideal-frontend'))); // ← FRONTEND
 
 // ✅ Mongo
-// Busca esta línea y asegúrate de que use process.env.MONGODB_URI
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(mongoURI)
   .then(() => console.log("✅ MongoDB conectado exitosamente a la nube"))
-  .catch(err => console.error("❌ Error al conectar MongoDB:", err));
-
+  .catch(err => {
+    console.error("❌ Error al conectar MongoDB:", err.message);
+    console.log("Dirección intentada:", mongoURI); // Esto nos dirá si está leyendo la variable
+  });
 
 //Cargar rutas
 require('./routes/productos')(app);
