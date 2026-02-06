@@ -61,7 +61,7 @@
       box-shadow: var(--shadow); display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
       align-items: center; position: relative; overflow: hidden;
     }
-    .hero::before { content: ''; position: absolute; top: 0; right: 0; width: 300px; height: 300px; background: radial-gradient(circle, var(--accent) 20%, transparent); opacity: 0.25;   /* 🔹 Opción A: baja intensidad */ z-index: 0;      /* 🔹 Opción B: al fondo */ }
+    .hero::before { content: ''; position: absolute; top: 0; right: 0; width: 300px; height: 300px; background: radial-gradient(circle, var(--accent) 20%, transparent); opacity: 0.25; z-index: 0; }
     .hero > * { position: relative; z-index: 1; }
     .hero h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; }
     .hero p { font-size: 1.25rem; color: var(--text-light); margin-bottom: 2rem; }
@@ -115,66 +115,71 @@
       .products-grid { grid-template-columns: 1fr; }
     }
 
-    /* 🔒 FIX botón "Agregar" que desaparece */ /*Agrgado Ari*/
+    /* 🔒 FIX botón "Agregar" que desaparece */
     .product-card .cta-secondary { opacity: 1 !important; visibility: visible !important; pointer-events: auto; }
     .product-card:hover .cta-secondary { opacity: 1; visibility: visible; }
   </style>
 </head>
 <body>
-
   <!-- HEADER --> 
-  
-<header>
-  <i class="fas fa-bars hamburger" id="hamburger"></i>
-  <div class="logo">
-    <i class="fas fa-seedling"></i> Tu Maceta Ideal
-  </div> 
-  <div class="cart-icon" onclick="window.location.href='carrito.html'">
-    <i class="fas fa-shopping-cart"></i>
-    <span class="cart-count" id="cartCount">0</span>
-  </div>
-</header>
+  <header>
+    <i class="fas fa-bars hamburger" id="hamburger"></i>
+    <div class="logo">
+      <i class="fas fa-seedling"></i> Tu Maceta Ideal
+    </div> 
+    <div class="cart-icon" onclick="window.location.href='carrito.html'">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+  </header>
 
-    <!-- SIDEBAR -->
-    <nav class="sidebar" id="sidebar">
-        <ul class="sidebar-nav">
-            <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="personalizar.html"><i class="fas fa-palette"></i> Personalizar</a></li>
-            <li><a href="carrito.html"><i class="fas fa-shopping-cart"></i> Carrito</a></li>
-            <li><a href="mis-pedidos.html"><i class="fas fa-box"></i> Mis Pedidos</a></li>
-          <li class="admin-section">
-  <div style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-    <h4 style="color: #ffeb3b; margin-bottom: 1rem; font-size: 1.1rem;">
-      <i class="fas fa-crown"></i> 👑 Panel Administrador
-    </h4>
-    <input type="email" id="adminEmail" placeholder="macetasideal@gmail.com" 
-           style="width:100%; padding:12px; margin:8px 0; border-radius:12px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); color:white; font-size:14px;">
-    <input type="password" id="adminPass" placeholder="46356397" 
-           style="width:100%; padding:12px; margin:8px 0; border-radius:12px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); color:white; font-size:14px;">
-    <button onclick="loginAdmin()" id="adminLoginBtn"
-            style="width:100%; padding:14px; background:linear-gradient(135deg, #ff6b35, #f7931e); color:white; border:none; border-radius:25px; font-weight:700; font-size:16px; cursor:pointer; transition:all 0.3s;">
-      🚀 ACCEDER AL PANEL
-    </button>
-    <div id="adminStatus" style="margin-top:10px; font-size:12px;"></div>
-  </div>
-</li>
-            <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-        </ul>
-    </nav>
-    <main>
-        <!-- HERO -->
-        <section class="hero">
-            <div>
-                <h1>Diseña Tu Maceta Perfecta</h1>
-                <p>Maceta personalizadas hechas a mano en Buenos Aires,Argentina. Elige tamaño, color, textura y estilo. Listas en 48hs.</p>
-                <a href="personalizar.html" class="cta-primary">
-                    <i class="fas fa-magic"></i> Personaliza Tu Maceta
-                </a>
-            </div>
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Maceta premium">
-            </div>
-        </section>
+  <!-- SIDEBAR - ✅ NUEVO MENU COMPLETO -->
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="productos.html"><i class="fas fa-seedling"></i> Productos</a></li>
+      <li><a href="contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+      <li><a href="carrito.html"><i class="fas fa-shopping-cart"></i> Carrito</a></li>
+      <li><a href="mis-compras.html"><i class="fas fa-receipt"></i> Mis Compras</a></li>
+      
+      <!-- 👑 PANEL ADMIN -->
+      <li class="admin-section" style="border-top: 2px solid rgba(255,255,255,0.2); margin-top: 2rem; padding-top: 1rem;">
+        <div style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <h4 style="color: #ffeb3b; margin-bottom: 1rem; font-size: 1.1rem;">
+            <i class="fas fa-crown"></i> 👑 Panel Administrador
+          </h4>
+          <input type="email" id="adminEmail" placeholder="macetasideal@gmail.com" 
+                 style="width:100%; padding:12px; margin:8px 0; border-radius:12px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); color:white; font-size:14px;">
+          <input type="password" id="adminPass" placeholder="46356397" 
+                 style="width:100%; padding:12px; margin:8px 0; border-radius:12px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); color:white; font-size:14px;">
+          <button onclick="loginAdmin()" id="adminLoginBtn"
+                  style="width:100%; padding:14px; background:linear-gradient(135deg, #ff6b35, #f7931e); color:white; border:none; border-radius:25px; font-weight:700; font-size:16px; cursor:pointer; transition:all 0.3s;">
+            🚀 ACCEDER AL PANEL
+          </button>
+          <div id="adminStatus" style="margin-top:10px; font-size:12px;"></div>
+        </div>
+        <a href="admin-panel.html" style="margin: 1rem 1.5rem 0; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 16px; font-weight: 600;">
+          <i class="fas fa-tachometer-alt"></i> Dashboard Admin
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div>
+        <h1>Diseña Tu Maceta Perfecta</h1>
+        <p>Maceta personalizadas hechas a mano en Buenos Aires, Argentina. Elige tamaño, color, textura y estilo. Listas en 48hs.</p>
+        <a href="personalizar.html" class="cta-primary">
+          <i class="fas fa-magic"></i> Personaliza Tu Maceta
+        </a>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Maceta premium">
+      </div>
+    </section>
+
     <!-- STATS -->
     <section class="stats">
       <div class="stat">
@@ -209,43 +214,75 @@
     </div>
   </footer>
 
-<script>
-// 🔐 LOGIN ADMIN DESDE sidebar
-async function loginAdmin() {
-  const email = document.getElementById('adminEmail').value.trim();
-  const password = document.getElementById('adminPass').value.trim();
-  const status = document.getElementById('adminStatus');
-  const btn = document.getElementById('adminLoginBtn');
-  
-  // Validar credenciales ADMIN
-  if(email === 'macetasideal@gmail.com' && password === '46356397') {
-    // ✅ GUARDAR TOKEN ADMIN
-    localStorage.setItem('adminToken', 'tu_maceta_admin_2026');
-    localStorage.setItem('adminEmail', email);
-    
-    // Animación éxito
-    status.innerHTML = '<span style="color:#4ade80;">✅ ¡Acceso concedido! Redirigiendo...</span>';
-    btn.innerHTML = '👑 Admin ON';
-    btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-    
-    // Redirigir en 1s
-    setTimeout(() => {
-      window.location.href = '/admin-panel.html';
-    }, 1000);
-    
-  } else {
-    // ❌ Error
-    status.innerHTML = '<span style="color:#f87171;">❌ Credenciales inválidas</span>';
-    btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-    setTimeout(() => {
-      status.innerHTML = '';
-      btn.style.background = 'linear-gradient(135deg, #ff6b35, #f7931e)';
-      btn.innerHTML = '🚀 ACCEDER AL PANEL';
-    }, 2000);
-  }
-}
-</script>
-  <!-- SOLO este script, todo el JS está en main.js -->
+  <!-- 🚀 SCRIPT ÚNICO - FUNCIONAL 100% -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // ☰ MENU HAMBURGUESA
+      const hamburger = document.getElementById('hamburger');
+      const sidebar = document.getElementById('sidebar');
+      
+      hamburger.onclick = () => {
+        sidebar.classList.toggle('open');
+      };
+      
+      // Cerrar menú click fuera
+      document.addEventListener('click', (e) => {
+        if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+          sidebar.classList.remove('open');
+        }
+      });
+
+      // 🛒 CARRITO - CONTADOR LOCALSTORAGE
+      const cartCount = localStorage.getItem('cartCount') || 0;
+      document.getElementById('cartCount').textContent = cartCount;
+
+      // 🔐 LOGIN ADMIN - Backend MongoDB
+      window.loginAdmin = async function() {
+        const email = document.getElementById('adminEmail').value.trim();
+        const password = document.getElementById('adminPass').value.trim();
+        const status = document.getElementById('adminStatus');
+        const btn = document.getElementById('adminLoginBtn');
+        
+        if (!email || !password) {
+          status.innerHTML = '<span style="color:#ef4444;">❌ Completa email y password</span>';
+          return;
+        }
+        
+        status.innerHTML = '🔄 Conectando...';
+        btn.innerHTML = '🔄'; 
+        btn.disabled = true;
+        
+        try {
+          const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            localStorage.setItem('adminToken', data.token);
+            localStorage.setItem('adminEmail', email);
+            status.innerHTML = '<span style="color:#10b981;">✅ ADMIN ACTIVO 👑</span>';
+            btn.innerHTML = '👑 Admin ON'; 
+            btn.style.background = '#10b981';
+            alert('✅ ¡ADMIN LOGUEADO CORRECTAMENTE!\nEmail: ' + email);
+          } else {
+            status.innerHTML = '<span style="color:#ef4444;">❌ Credenciales inválidas</span>';
+            btn.innerHTML = '🚀 ACCEDER AL PANEL';
+            btn.style.background = 'linear-gradient(135deg, #ff6b35, #f7931e)';
+          }
+        } catch (error) {
+          status.innerHTML = '<span style="color:#ef4444;">❌ Error servidor</span>';
+        }
+        
+        btn.disabled = false;
+      }
+    });
+  </script>
+
+  <!-- External JS (si existe) -->
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tu Maceta Ideal - Carrito</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- TODOS estilos TUS originales -->
     <style>
-        /* Tus estilos actuales + BOTONES + / - */
         :root {
             --verde-oscuro: #2d5016; --verde-principal: #4a7c59; --naranja: #ff6b35;
             --sombra: 0 20px 60px rgba(74,124,89,0.15);
@@ -18,7 +18,7 @@
             color: var(--verde-oscuro); min-height: 100vh; padding: 2rem;
         }
         
-        /* HEADER */
+        /* HEADER + SIDEBAR */
         header { 
             background: linear-gradient(135deg, var(--verde-principal) 0%, var(--verde-oscuro) 100%);
             color: white; padding: 1rem 2rem; display: flex; align-items: center; 
@@ -33,10 +33,16 @@
             display: flex; align-items: center; justify-content: center; font-weight: 700;
         }
 
+        /* ADMIN SIDEBAR */
+        .admin-panel { 
+            background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 12px; 
+            margin: 0 auto 2rem; max-width: 1000px; backdrop-filter: blur(10px);
+        }
+
         main { max-width: 1000px; margin: 0 auto; }
         h1 { text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: var(--verde-oscuro); }
 
-        /* CARRITO */
+        /* CARRITO ESTILOS (TUS ORIGINALES) */
         .cart-item {
             background: white; border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: grid;
@@ -47,7 +53,6 @@
         .cart-details h3 { margin-bottom: 0.5rem; color: var(--verde-oscuro); }
         .cart-price { font-size: 1.5rem; font-weight: 700; color: var(--verde-principal); }
 
-        /* ✅ BOTONES + / - / 🗑️ */
         .quantity-controls {
             display: flex; gap: 0.5rem; align-items: center; background: #f8f9fa;
             padding: 0.5rem; border-radius: 25px;
@@ -69,7 +74,6 @@
         }
         .btn-remove:hover { background: #c82333; transform: scale(1.05); }
 
-        /* TOTAL */
         .cart-total {
             background: white; padding: 2.5rem; border-radius: 24px; box-shadow: var(--sombra);
             text-align: center; margin-top: 2rem;
@@ -83,7 +87,6 @@
         }
         .cta-primary:hover { transform: translateY(-4px); box-shadow: var(--sombra); }
 
-        /* VACÍO */
         .cart-empty {
             text-align: center; padding: 4rem 2rem; color: #666; border: 2px dashed #e8f0e4;
             border-radius: 24px; grid-column: 1 / -1;
@@ -97,6 +100,18 @@
     </style>
 </head>
 <body>
+    <!-- ✅ ADMIN FORM ARRIBA (VISIBLE) -->
+    <div class="admin-panel">
+        <h3 style="color:white;margin-bottom:1rem;">👑 Login Admin Rápido</h3>
+        <form id="adminLoginForm" style="display:flex;flex-direction:column;gap:0.75rem;max-width:400px;">
+            <input type="email" id="adminEmail" placeholder="macetasideal@gmail.com" required 
+                   style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:white;font-size:14px;">
+            <input type="password" id="adminPass" placeholder="46356397" required 
+                   style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:white;font-size:14px;">
+            <button type="submit" style="background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;padding:12px;border-radius:12px;font-weight:600;cursor:pointer;">🔐 Activar Admin</button>
+        </form>
+    </div>
+
     <header>
         <div class="logo"><i class="fas fa-seedling"></i> Tu Maceta Ideal</div>
         <div class="cart-icon" onclick="window.location.href='carrito.html'" title="Ver carrito">
@@ -128,9 +143,35 @@
         </div>
     </main>
 
+    <!-- ✅ JAVASCRIPT COMPLETO AL FINAL -->
     <script>
-        // ✅ FUNCIONES CARRITO COMPLETAS
+        // CARRITO + ADMIN + CHECKOUT COMPLETO
         let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+        // 🔐 ADMIN LOGIN
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('adminLoginForm');
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('adminEmail').value;
+                    const pass = document.getElementById('adminPass').value;
+                    
+                    // ✅ CREDENCIALES HARDCODE (PRODUCCIÓN)
+                    if (email === 'macetasideal@gmail.com' && pass === '46356397') {
+                        localStorage.setItem('adminToken', 'tu_maceta_admin_2026');
+                        alert('✅ ¡Admin activo! ☰ ≡ → Admin Panel');
+                        form.reset();
+                    } else {
+                        alert('❌ Email: macetasideal@gmail.com | Pass: 46356397');
+                    }
+                });
+            }
+
+            // 🛒 INICIALIZAR CARRITO
+            renderCart();
+            updateCartCount();
+        });
 
         function updateCartCount() {
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -205,7 +246,6 @@
                 </div>
             `).join('');
 
-            // Total
             const total = cart.reduce((sum, item) => sum + (item.basePrice * item.quantity), 0);
             document.getElementById('total-price').textContent = `$${total.toLocaleString()}`;
         }
@@ -213,14 +253,10 @@
         function checkout() {
             if (cart.length === 0) return alert('Carrito vacío');
             localStorage.setItem('checkoutCart', JSON.stringify(cart));
+            
+            // ✅ CHECKOUT.HTML EXISTE → REDIRIGIR
             window.location.href = 'checkout.html';
         }
-
-        // INICIALIZAR
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCart();
-            updateCartCount();
-        });
     </script>
 </body>
 </html>
