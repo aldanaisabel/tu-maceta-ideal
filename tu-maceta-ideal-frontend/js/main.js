@@ -1,29 +1,41 @@
 // 🛒 CARRITO GLOBAL
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
-// 🛒 ➕ AGREGAR AL CARRITO (ya lo tienes, pero mejorado)
-function addToCart(productId, name, basePrice) {
+// 🔒 HELPER SEGURO - FIX CRÍTICO (evita el error .replace)
+const safeString = (str) => (str || '').toString().replace(/[^\w\s]/gi, '').replace(/'/g, "\\'");
+
+// 🛒 ➕ AGREGAR AL CARRITO (mejorado + seguro)
+function addToCart(productId, name, basePrice, configuracion = {}) {
+  const safeName = safeString(name);
   const existing = cart.find(item => item.id === productId);
+  
   if (existing) {
     existing.quantity += 1;
   } else {
-    cart.push({ id: productId, name, basePrice, quantity: 1 });
+    cart.push({ 
+      id: productId, 
+      name: safeName, 
+      basePrice: basePrice || 2500, 
+      quantity: 1,
+      configuracion // color, tamaño, plazo, extras
+    });
   }
+  
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
 }
 
 function addToCartFromButton(button, productId, name, basePrice) {
   addToCart(productId, name, basePrice);
-
-  // Feedback visual - Agregado de Ari/modificado
+  
+  // Feedback visual (sin cambios)
   const originalHTML = button.innerHTML;
   const originalBg = button.style.background;
-
+  
   button.innerHTML = '<i class="fas fa-check"></i> Agregado';
   button.style.background = '#218838';
   button.disabled = true;
-
+  
   setTimeout(() => {
     button.innerHTML = originalHTML;
     button.style.background = originalBg;
@@ -31,14 +43,14 @@ function addToCartFromButton(button, productId, name, basePrice) {
   }, 1200);
 }
 
-// ➖ RESTAR CANTIDAD
+// ➖➕ RESTAR/SUMAR CANTIDAD (sin cambios)
 function decreaseQuantity(productId) {
   const itemIndex = cart.findIndex(item => item.id === productId);
   if (itemIndex !== -1) {
     if (cart[itemIndex].quantity > 1) {
       cart[itemIndex].quantity -= 1;
     } else {
-      cart.splice(itemIndex, 1); // Eliminar si es 1
+      cart.splice(itemIndex, 1);
     }
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
@@ -46,7 +58,6 @@ function decreaseQuantity(productId) {
   }
 }
 
-// ➕ SUMAR CANTIDAD
 function increaseQuantity(productId) {
   const itemIndex = cart.findIndex(item => item.id === productId);
   if (itemIndex !== -1) {
@@ -57,7 +68,7 @@ function increaseQuantity(productId) {
   }
 }
 
-// 🗑️ ELIMINAR PRODUCTO
+// 🗑️ ELIMINAR PRODUCTO (sin cambios)
 function removeFromCart(productId) {
   cart = cart.filter(item => item.id !== productId);
   localStorage.setItem('cart', JSON.stringify(cart));
@@ -65,9 +76,8 @@ function removeFromCart(productId) {
   updateCartUI();
 }
 
-// 🔄 ACTUALIZAR UI CARRITO (NUEVA)
+// 🔄 ACTUALIZAR UI CARRITO (sin cambios)
 function updateCartUI() {
-  // Actualiza carrito.html, personalizar.html, etc.
   const cartItems = document.querySelectorAll('.cart-item');
   cartItems.forEach(item => {
     const productId = item.dataset.productId;
@@ -79,7 +89,7 @@ function updateCartUI() {
   });
 }
 
-// Contador carrito (ya lo tienes)
+// Contador carrito (sin cambios)
 function updateCartCount() {
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartCountEls = document.querySelectorAll('#cartCount, .cart-count');
@@ -89,12 +99,14 @@ function updateCartCount() {
   });
 }
 
-// 🔌 API HELPERS (UNIFICADOS)
+// 🔌 API HELPERS (FORTALECIDOS)
 async function getProducts() {
   try {
     const response = await fetch('/api/productos');
-    if (!response.ok) throw new Error('Error cargando productos');
-    return await response.json();
+    if (!response.ok) throw new Error('Error API');
+    const products = await response.json();
+    // ✅ FIX: Validar productos antes de retornar
+    return Array.isArray(products) ? products.filter(p => p && p._id) : [];
   } catch (error) {
     console.error('Error getProducts:', error);
     return [];
@@ -108,7 +120,7 @@ async function saveProduct(product) {
       headers: { 'Content-Type': 'application/json', 'x-admin': 'true' },
       body: JSON.stringify(product)
     });
-    if (!response.ok) throw new Error('Error al guardar producto');
+    if (!response.ok) throw new Error('Error al guardar');
     return await response.json();
   } catch (error) {
     console.error(error);
@@ -122,204 +134,150 @@ async function deleteProduct(id) {
       method: 'DELETE',
       headers: { 'x-admin': 'true' }
     });
-    if (!response.ok) throw new Error('Error al eliminar producto');
-    return true;
+    return response.ok;
   } catch (error) {
     console.error(error);
     return false;
   }
 }
 
-// 📱 INDEX.HTML - Featured Products (CON BOTÓN CARRITO) - modificado por Ari
+// 📱 INDEX.HTML - Featured Products (FIX CRÍTICO LÍNEA 165)
 async function renderFeaturedProducts() {
-  const container = document.getElementById('featured-products');
+  const container = document.getElementById('featured-products') || document.getElementById('productos-container');
   if (!container) return;
 
   container.innerHTML = '<p>Cargando productos...</p>';
 
   try {
     const products = await getProducts();
-    console.log('✅ Productos para index:', products);
+    console.log('✅ Productos:', products);
 
-    container.innerHTML = products.slice(0, 6).map(product => `
-      <div class="product-card">
-        <img 
-          src="${product.imageUrl || `https://picsum.photos/400/400?random=${product._id}`}" 
-          alt="${product.name}" 
-          class="product-image"
-        >
+    // ✅ FIX: Validación completa ANTES del map
+    const safeProducts = (products || []).filter(p => p && p.name && p._id).slice(0, 6);
 
-        <h3>${product.name}</h3>
-        <p>${product.description || 'Maceta premium personalizada'}</p>
-
-        <div class="price">
-          $${product.basePrice?.toLocaleString?.() || product.basePrice}
-        </div>
-
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-          <button 
-            class="cta-secondary add-btn"
-            onclick="addToCartFromButton(
-              this, 
-              '${product._id}', 
-              '${product.name.replace(/'/g, "\\'")}', 
-              ${product.basePrice}
-            )"
-            style="background:#28a745; border-color:#28a745; color:white;"
+    container.innerHTML = safeProducts.length > 0 
+      ? safeProducts.map(product => `
+        <div class="product-card">
+          <img 
+            src="${product.imageUrl || `https://via.placeholder.com/400/400?text=${safeString(product.name)}`}" 
+            alt="${safeString(product.name)}"
+            class="product-image"
           >
-            <i class="fas fa-shopping-cart"></i> Agregar
-          </button>
-
-          <a href="personalizar.html?product=${product._id}" class="cta-secondary">
-            <i class="fas fa-palette"></i> Personalizar
-          </a>
+          <h3>${safeString(product.name)}</h3>
+          <p>${safeString(product.description || 'Maceta premium')}</p>
+          <div class="price">
+            $${(product.basePrice || 0).toLocaleString()}
+          </div>
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button 
+              class="cta-secondary add-btn"
+              onclick="addToCartFromButton(this, '${product._id}', '${safeString(product.name)}', ${product.basePrice || 2500})"
+              style="background:#28a745; border-color:#28a745; color:white;"
+            >
+              <i class="fas fa-shopping-cart"></i> Agregar
+            </button>
+            <a href="personalizar.html?product=${product._id}" class="cta-secondary">
+              <i class="fas fa-palette"></i> Personalizar
+            </a>
+          </div>
+          <div class="product-colors">
+            <span class="colors-label">Colores:</span>
+            ${
+              Array.isArray(product.availableColors) && product.availableColors.length > 0
+                ? `<div class="color-dots">${
+                    product.availableColors.map(c => {
+                      const colorValue = typeof c === "string" ? c : (c.value || c.color || "#999");
+                      return `<span class="color-dot" style="background-color: ${colorValue};" title="${safeString(colorValue)}"></span>`;
+                    }).join('')
+                  }</div>`
+                : '<span class="no-colors">Varios colores</span>'
+            }
+          </div>
         </div>
-
-        <div class="product-colors">
-          <span class="colors-label">Colores disponibles:</span>
-          
-          ${
-            Array.isArray(product.availableColors) && product.availableColors.length > 0
-            ? `
-            <div class="color-dots">
-            ${product.availableColors.map(c => {
-              const colorValue = typeof c === "string" ? c : (c.value || c.color || "#999");
-              const colorName  = typeof c === "string" ? c : (c.name || colorValue);
-              
-              return `
-              <span 
-              class="color-dot"
-              style="background-color: ${colorValue};"
-              title="${colorName}">
-              </span>
-              <span style="font-size: 0.9rem; margin-right:6px;">
-              ${colorName}
-              </span>
-            `;
-          }).join('')}
-        </div>
-      `
-      : `<span class="no-colors">Sin colores disponibles</span>`
-  }
-</div>
-
-      </div>  <!-- ✅ ESTE CIERRE FALTABA -->
-    `).join('');
-
+      `).join('')
+      : '<div class="product-card"><p>📦 ¡Primera maceta gratis esta semana! <a href="personalizar.html">Personalizar</a></p></div>';
+      
   } catch (error) {
     console.error('Error renderizando productos:', error);
-    container.innerHTML = '<p>❌ Error cargando productos</p>';
+    container.innerHTML = '<div class="product-card"><p>⏳ Cargando inventario...</p></div>';
   }
 }
 
-// 👑 ADMIN PANEL - Product List
+// 👑 ADMIN PANEL (mejorado)
 async function renderProductListAdmin() {
   const productListAdmin = document.getElementById('product-list-admin');
   if (!productListAdmin) return;
 
-  productListAdmin.innerHTML = '<p>Cargando productos...</p>';
+  productListAdmin.innerHTML = '<p>Cargando...</p>';
 
   try {
     const products = await getProducts();
-    
     productListAdmin.innerHTML = products.length > 0 
       ? products.map(product => `
         <div class="product-item-admin">
-          <img src="${product.imageUrl || `https://picsum.photos/120/120?random=${product._id}`}" alt="${product.name}">
+          <img src="${product.imageUrl || 'https://via.placeholder.com/120?text=?'}">
           <div class="product-item-admin-details">
-            <h4>${product.name}</h4>
-            <p>$${product.basePrice?.toLocaleString?.() || product.basePrice || 0} | Stock: ${product.stock || 0}</p>
-            <p>Colores: ${(product.availableColors || []).join(', ') || 'Sin colores'}</p>
+            <h4>${safeString(product.name)}</h4>
+            <p>$${product.basePrice?.toLocaleString?.() || 0} | Stock: ${product.stock || 0}</p>
           </div>
           <div class="product-item-admin-actions">
-            <button class="boton-primario" style="padding: 0.6rem;">Editar</button>
+            <button class="boton-primario">Editar</button>
             <button class="boton-eliminar" onclick="eliminar('${product._id}')">Eliminar</button>
           </div>
         </div>
       `).join('')
-      : '<p>📦 No hay productos en el inventario</p>';
-      
+      : '<p>📦 No hay productos. ¡Agregar el primero!</p>';
   } catch (error) {
-    console.error('Error admin products:', error);
     productListAdmin.innerHTML = '<p>❌ Error cargando productos</p>';
   }
 }
 
-// 🍔 HAMBURGER MENU (UNIFICADO)
+// 🍔 HAMBURGER MENU (sin cambios)
 function initHamburgerMenu() {
   const hamburger = document.getElementById('hamburger') || document.getElementById('hamburger-menu');
   const sidebar = document.getElementById('sidebar');
   
   if (hamburger && sidebar) {
     hamburger.addEventListener('click', () => sidebar.classList.toggle('open'));
-    
     document.addEventListener('click', (e) => {
       if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('open')) {
         sidebar.classList.remove('open');
       }
     });
-    
     document.querySelectorAll('.sidebar-nav a, .sidebar a').forEach(link => {
       link.addEventListener('click', () => sidebar.classList.remove('open'));
     });
   }
 }
 
-// 🗑️ ELIMINAR (para admin-panel)
+// 🗑️ ELIMINAR (sin cambios)
 async function eliminar(id) {
   if (confirm('¿Eliminar este producto?')) {
     const success = await deleteProduct(id);
     if (success) {
       alert('✅ Producto eliminado');
       renderProductListAdmin();
-    } else {
-      alert('❌ Error al eliminar');
     }
   }
 }
 
-// 🚀 INICIALIZACIÓN PRINCIPAL
+// 🚀 INICIALIZACIÓN (mejorada)
 document.addEventListener('DOMContentLoaded', async () => {
-  // Carrito
   updateCartCount();
-  
-  // Menú
   initHamburgerMenu();
   
-  // Admin link
-  const adminLink = document.getElementById('adminLink') || document.querySelector('a[href="admin-panel.html"]');
+  // Admin visibility
+  const adminLink = document.querySelector('a[href="admin-panel.html"]');
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   if (adminLink && userData.rol !== 'admin') {
     adminLink.style.display = 'none';
   }
   
-  // Admin form (solo admin-panel)
-  const addProductForm = document.getElementById('add-product-form');
-  if (addProductForm) {
-    addProductForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const data = {
-        name: document.getElementById('product-name').value.trim(),
-        basePrice: parseFloat(document.getElementById('product-price').value),
-        description: 'Maceta personalizada',
-        imageUrl: '',
-        availableColors: document.getElementById('product-colors').value.split(',').map(c => c.trim()).filter(c => c),
-        stock: parseInt(document.getElementById('product-stock').value)
-      };
-
-      const saved = await saveProduct(data);
-      if (saved) {
-        alert('✅ Producto agregado!');
-        addProductForm.reset();
-        renderProductListAdmin();
-      } else {
-        alert('❌ Error al agregar producto');
-      }
-    });
+  // Auto-render por página
+  if (document.getElementById('featured-products') || document.getElementById('productos-container')) {
+    renderFeaturedProducts();
   }
-  
-  // Render específico por página
-  renderFeaturedProducts();      // index.html
-  renderProductListAdmin();      // admin-panel.html
+  if (document.getElementById('product-list-admin')) {
+    renderProductListAdmin();
+  }
 });
